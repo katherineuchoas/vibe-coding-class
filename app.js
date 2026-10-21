@@ -10,6 +10,10 @@ lessons.forEach((current) => {
 });
 
 const toast = document.querySelector("#toast");
+const statusMessage = document.querySelector("#connection-status");
+const connectionForm = document.querySelector("#supabase-config-form");
+const clearConfigButton = document.querySelector("#clear-supabase-config");
+const storageKey = "vibe-coding-supabase-public-config";
 let toastTimer;
 
 function showMessage(message) {
@@ -17,6 +21,11 @@ function showMessage(message) {
   toast.classList.add("show");
   window.clearTimeout(toastTimer);
   toastTimer = window.setTimeout(() => toast.classList.remove("show"), 2200);
+}
+
+function setConnectionStatus(message, state = "") {
+  statusMessage.textContent = message;
+  statusMessage.dataset.state = state;
 }
 
 async function copyText(text) {
@@ -51,3 +60,90 @@ document.querySelectorAll("[data-copy]").forEach((button) => {
     }
   });
 });
+
+function renderPhases(rows) {
+  rows.forEach((phase) => {
+    const card = document.querySelector(`[data-phase-id="${Number(phase.id)}"]`);
+    if (!card) return;
+
+    const title = card.querySelector("h3");
+    const description = card.querySelector("p");
+    if (title) title.textContent = phase.titulo;
+    if (description) description.textContent = phase.descricao;
+  });
+}
+
+async function loadPhases(urlValue, publicKey) {
+  const url = new URL(urlValue);
+  if (url.protocol !== "https:") {
+    throw new Error("A URL do Supabase precisa começar com https://.");
+  }
+  if (/^(sb_secret_|service_role)/i.test(publicKey)) {
+    throw new Error("Essa parece ser uma chave secreta. Use apenas a chave pública.");
+  }
+
+  setConnectionStatus("Carregando as etapas do Supabase…", "loading");
+  const endpoint = new URL("/rest/v1/fases", url.origin);
+  endpoint.search = new URLSearchParams({
+    select: "id,titulo,descricao",
+    order: "id.asc"
+  });
+
+  const headers = { apikey: publicKey };
+  // New publishable keys are not JWTs; legacy anon keys are JWTs.
+  if (!publicKey.startsWith("sb_publishable_")) {
+    headers.Authorization = `Bearer ${publicKey}`;
+  }
+
+  const response = await fetch(endpoint, { headers });
+  if (!response.ok) {
+    const details = await response.text();
+    throw new Error(`O Supabase respondeu ${response.status}. ${details.slice(0, 180)}`);
+  }
+
+  const rows = await response.json();
+  if (!Array.isArray(rows)) throw new Error("A resposta do Supabase veio em um formato inesperado.");
+  if (rows.length === 0) {
+    setConnectionStatus("Conexão feita, mas a tabela fases está vazia. Aplique a migration do projeto e tente de novo.", "empty");
+    return;
+  }
+
+  renderPhases(rows);
+  setConnectionStatus(`Pronto! ${rows.length} etapa(s) carregada(s) do Supabase.`, "success");
+}
+
+function saveConfig(url, key) {
+  localStorage.setItem(storageKey, JSON.stringify({ url, key }));
+}
+
+connectionForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  const url = document.querySelector("#supabase-url").value.trim();
+  const key = document.querySelector("#supabase-key").value.trim();
+
+  try {
+    saveConfig(url, key);
+    await loadPhases(url, key);
+  } catch (error) {
+    setConnectionStatus(`Não consegui conectar. ${error.message} As etapas do plano continuam visíveis.`, "error");
+  }
+});
+
+clearConfigButton.addEventListener("click", () => {
+  localStorage.removeItem(storageKey);
+  connectionForm.reset();
+  setConnectionStatus("Configuração apagada. As etapas do plano continuam visíveis.");
+});
+
+try {
+  const saved = JSON.parse(localStorage.getItem(storageKey) || "null");
+  if (saved?.url && saved?.key) {
+    document.querySelector("#supabase-url").value = saved.url;
+    document.querySelector("#supabase-key").value = saved.key;
+    loadPhases(saved.url, saved.key).catch((error) => {
+      setConnectionStatus(`Não consegui conectar. ${error.message} As etapas do plano continuam visíveis.`, "error");
+    });
+  }
+} catch {
+  localStorage.removeItem(storageKey);
+}
