@@ -73,14 +73,31 @@ function renderPhases(rows) {
   });
 }
 
+function confirmPublicKey(publicKey) {
+  if (/^(sb_secret_|service_role)/i.test(publicKey)) {
+    throw new Error("Essa parece ser uma chave secreta. Use apenas a chave pública.");
+  }
+
+  const jwtPayload = publicKey.split(".")[1];
+  if (jwtPayload) {
+    try {
+      const base64 = jwtPayload.replace(/-/g, "+").replace(/_/g, "/");
+      const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, "=");
+      if (JSON.parse(atob(padded)).role === "service_role") {
+        throw new Error("Essa é uma chave de serviço. Use apenas a chave pública.");
+      }
+    } catch (error) {
+      if (error.message.includes("chave de serviço")) throw error;
+    }
+  }
+}
+
 async function loadPhases(urlValue, publicKey) {
   const url = new URL(urlValue);
   if (url.protocol !== "https:") {
     throw new Error("A URL do Supabase precisa começar com https://.");
   }
-  if (/^(sb_secret_|service_role)/i.test(publicKey)) {
-    throw new Error("Essa parece ser uma chave secreta. Use apenas a chave pública.");
-  }
+  confirmPublicKey(publicKey);
 
   setConnectionStatus("Carregando as etapas do Supabase…", "loading");
   const endpoint = new URL("/rest/v1/fases", url.origin);
@@ -122,8 +139,8 @@ connectionForm.addEventListener("submit", async (event) => {
   const key = document.querySelector("#supabase-key").value.trim();
 
   try {
-    saveConfig(url, key);
     await loadPhases(url, key);
+    saveConfig(url, key);
   } catch (error) {
     setConnectionStatus(`Não consegui conectar. ${error.message} As etapas do plano continuam visíveis.`, "error");
   }
@@ -131,8 +148,7 @@ connectionForm.addEventListener("submit", async (event) => {
 
 clearConfigButton.addEventListener("click", () => {
   localStorage.removeItem(storageKey);
-  connectionForm.reset();
-  setConnectionStatus("Configuração apagada. As etapas do plano continuam visíveis.");
+  window.location.reload();
 });
 
 try {
