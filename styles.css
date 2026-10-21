@@ -133,3 +133,9 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
 }
+
+.track-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: .7rem; margin: .8rem 0 1.2rem; }
+.track-card { padding: 1rem; border: 1px solid var(--line); border-radius: 14px; background: #fffdfa; }
+.track-card strong { color: var(--plum); }
+.track-card p { margin: .45rem 0 0; color: var(--muted); font-size: .88rem; }
+@media (max-width: 560px) { .track-grid { grid-template-columns: 1fr; } }
