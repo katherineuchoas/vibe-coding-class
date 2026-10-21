@@ -74,6 +74,31 @@ Por enquanto, quero construir só a primeira parte: [o que deve aparecer na tela
 Antes de montar o plano, faça até 5 perguntas para entender melhor.
 Depois, crie um plano em 4 etapas: tela, dados, melhorias e login.
 Não escreva código ainda. Use palavras simples e diga como vou saber se cada etapa ficou pronta.</pre></div>
+            <h3 class="subheading">Escolha uma trilha</h3>
+            <div class="track-grid">
+              <div class="track-card"><strong>Presença digital</strong><p>Uma página com seu nome, uma bio curta e seus links reais.</p></div>
+              <div class="track-card"><strong>Produtividade</strong><p>Um app para tarefas, hábitos, foco e materiais de estudo.</p></div>
+              <div class="track-card"><strong>Recolocação</strong><p>Uma ferramenta para comparar seu currículo com vagas coladas por você. Sem buscar vagas automaticamente.</p></div>
+              <div class="track-card"><strong>Ideia própria</strong><p>Seu projeto, com uma primeira tela simples para testar a ideia.</p></div>
+            </div>
+            <div class="prompt-card"><div class="prompt-heading"><span>✦</span><div><h3>Prompt para pedir uma segunda opinião</h3><p>Cole o plano em outro modelo de IA.</p></div><button class="copy-button" type="button" data-copy="prompt-revisao">Copiar</button></div><pre id="prompt-revisao">Revise este plano de projeto com cuidado.
+
+O que está claro e deve continuar?
+O que está confuso ou faltando?
+Que risco ou etapa foi esquecida?
+As instruções são específicas o bastante para uma IA seguir uma fase por vez?
+
+Responda em tabelas simples: pontos fortes, melhorias, outras opções e sugestões por prioridade.
+Não invente detalhes sobre o projeto.
+PLANO:
+[cole o plano aqui]</pre></div>
+            <div class="prompt-card"><div class="prompt-heading"><span>✦</span><div><h3>Prompt para construir a primeira tela</h3><p>Use depois de revisar o plano.</p></div><button class="copy-button" type="button" data-copy="prompt-fase1">Copiar</button></div><pre id="prompt-fase1">Leia meu plano. Construa SOMENTE a primeira etapa: [descreva a tela].
+
+Use estes conteúdos reais: [cole textos, links ou tarefas].
+Quero um visual [descreva cores e referências].
+Quando terminar, explique como posso abrir a tela e conferir se [critério de pronto].
+Não crie banco de dados, área de edição ou login nesta etapa.
+Se faltar uma informação, pergunte antes de inventar.</pre></div>
             <div class="exercise-box"><span class="exercise-label">ATIVIDADE · 50 MIN</span><h3>Planeje e mostre a primeira tela</h3><ol class="task-list"><li>Escolha uma ideia e conte o contexto.</li><li>Peça um plano. Responda às perguntas da IA.</li><li>Peça a outra IA uma revisão e ajuste o plano.</li><li>Construa só a primeira tela.</li><li>Teste no celular e anote o que quer mudar.</li></ol><p class="small-note">As trilhas do material: presença digital, produtividade pessoal, recolocação profissional ou uma ideia sua.</p></div>
           </div>
         </details>
@@ -95,7 +120,15 @@ Diga quais tabelas seriam necessárias e como posso conferir se funcionou.
 Não crie login nem mude a tela nesta etapa.
 Avise se faltar alguma informação. Não invente dados.</pre></div>
             <div class="callout callout-warning"><strong>🔐 Segredo não vai no código.</strong> Nunca coloque senha ou chave secreta no GitHub. A chave de serviço do Supabase não deve ficar na página. Antes de publicar, as regras de acesso precisam ser configuradas.</div>
-            <div class="exercise-box"><span class="exercise-label">ATIVIDADE · 40 MIN</span><h3>Faça seu projeto lembrar</h3><ol class="task-list"><li>Crie ou acesse sua conta do Supabase.</li><li>Conecte o banco à ferramenta de IA escolhida.</li><li>Siga o plano e mova os dados para as tabelas.</li><li>Feche a aba, abra de novo e confira os dados.</li></ol><p class="small-note">Exercício 2: cada trilha tem suas tabelas e seu próprio critério de pronto. Nesta fase, o material orienta não criar login nem área de administração.</p></div>
+            <div class="exercise-box"><span class="exercise-label">ATIVIDADE · 40 MIN</span><h3>Faça seu projeto lembrar</h3><ol class="task-list"><li>Crie ou acesse sua conta do Supabase.</li><li>Conecte o banco à ferramenta de IA escolhida.</li><li>Siga o plano e mova os dados para as tabelas.</li><li>Feche a aba, abra de novo e confira os dados.</li></ol><p class="small-note">Exercício 2: cada trilha tem suas tabelas e seu próprio critério de pronto. Nesta fase, o material orienta não criar login nem área de administração.</p>
+            <h3 class="subheading">Exercício 2 · o que muda em cada trilha?</h3>
+            <div class="track-grid">
+              <div class="track-card"><strong>Presença digital</strong><p><b>Tabelas:</b> perfil e blocos. Troque a leitura dos dados para buscar no Supabase. Confira carregamento, erro e lista vazia.</p><p><b>Pronto quando:</b> você muda um título na tabela, recarrega e vê a tela atualizada.</p></div>
+              <div class="track-card"><strong>Produtividade</strong><p><b>Tabelas:</b> tarefas, hábitos, registros, sessões de foco e biblioteca. Leve para o banco os dados que já existiam.</p><p><b>Pronto quando:</b> marca um hábito no celular e vê a mudança no computador.</p></div>
+              <div class="track-card"><strong>Recolocação</strong><p><b>Tabelas:</b> currículo, vagas, resultados e candidaturas. A chave de IA deve ficar no servidor, como segredo.</p><p><b>Pronto quando:</b> analisa três vagas, fecha o app e depois encontra o histórico.</p></div>
+              <div class="track-card"><strong>Ideia própria</strong><p>Leia o plano, confirme qualquer custo antes de criar o projeto, crie as tabelas previstas e peça à IA para confirmar os nomes.</p><p><b>Pronto quando:</b> o teste definido no seu plano funciona.</p></div>
+            </div>
+            <div class="callout"><strong>Nesta etapa:</strong> não crie login nem área de edição. O material também deixa a priorização inteligente para depois. A chave pública e a chave secreta são coisas diferentes: nunca coloque a chave secreta no navegador ou em um repositório público.</div></div>
           </div>
         </details>
       </article>
