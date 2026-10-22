@@ -39,26 +39,7 @@
         <div><p class="eyebrow">O CAMINHO</p><h2>Quatro etapas, uma casa</h2></div>
         <p>Cada aula constrói uma parte. Faça na ordem e avance quando a etapa estiver funcionando.</p>
       </div>
-      <details class="database-connection">
-        <summary><span class="connection-icon" aria-hidden="true">↗</span><span><strong>Conectar ao Supabase</strong><small>Salvo só neste navegador</small></span></summary>
-        <div class="connection-body">
-          <p>Use a URL do projeto e uma chave pública para buscar as quatro etapas. A chave fica salva só neste navegador.</p>
-          <form id="supabase-config-form" class="connection-form">
-            <label for="supabase-url">URL do projeto
-              <input id="supabase-url" name="url" type="url" inputmode="url" placeholder="https://seu-projeto.supabase.co" autocomplete="url" required>
-            </label>
-            <label for="supabase-key">Chave pública (publishable ou anon)
-              <input id="supabase-key" name="key" type="password" autocomplete="off" placeholder="Cole a chave pública" required>
-            </label>
-            <div class="connection-actions">
-              <button class="button button-primary" type="submit">Conectar e carregar</button>
-              <button class="clear-button" id="clear-supabase-config" type="button">Apagar configuração</button>
-            </div>
-          </form>
-          <p class="connection-note">Nunca use uma chave secret ou service_role aqui. A tabela da aula permite só leitura. Configure RLS antes de publicar o site conectado.</p>
-        </div>
-      </details>
-      <p class="connection-status" id="connection-status" role="status" aria-live="polite">Mostrando as etapas do plano. Conecte o Supabase para buscar os títulos da tabela.</p>
+      <p class="roadmap-note"><span aria-hidden="true">i</span> Este site é um guia. Ele não pede a URL nem a chave do seu banco. Para conectar o Supabase ao seu projeto, veja o passo a passo da Aula 2.</p>
       <div class="phase-grid">
         <a class="phase-card phase-peach" data-phase-id="1" href="#aula-1"><span class="phase-number">01</span><span class="phase-icon" aria-hidden="true">☀</span><h3>A Fachada</h3><p>A tela que a pessoa vê e usa.</p><span class="phase-meta">Aula 1 · Interface</span></a>
         <a class="phase-card phase-blue" data-phase-id="2" href="#aula-2"><span class="phase-number">02</span><span class="phase-icon" aria-hidden="true">▤</span><h3>O Caderno</h3><p>Onde os dados ficam guardados.</p><span class="phase-meta">Aula 2 · Banco de dados</span></a>
@@ -139,7 +120,18 @@ Use como exemplo [marcar um hábito / editar um perfil / salvar uma tarefa].
 Diga quais tabelas seriam necessárias e como posso conferir se funcionou.
 Não crie login nem mude a tela nesta etapa.
 Avise se faltar alguma informação. Não invente dados.</pre></div>
-            <div class="callout callout-warning"><strong>🔐 Segredo não vai no código.</strong> Nunca coloque senha ou chave secreta no GitHub. A chave de serviço do Supabase não deve ficar na página. Antes de publicar, as regras de acesso precisam ser configuradas.</div>
+            <div class="info-card soft-lilac connection-guide" id="guia-conexao">
+              <h3>Conecte o Supabase ao seu projeto</h3>
+              <p>Este site não pede nem guarda sua URL ou chave. A conexão deve acontecer dentro do projeto que você está construindo.</p>
+              <ol class="number-list">
+                <li>Na ferramenta de IA que ajuda no seu projeto, abra as opções de conexão e procure Supabase.</li>
+                <li>Confira o nome do projeto antes de autorizar. Conecte apenas o banco que você pretende usar.</li>
+                <li>Se houver a opção, comece com acesso somente para leitura. Dê mais acesso apenas quando a atividade precisar.</li>
+                <li>Se sua ferramenta não tiver essa conexão, siga o guia oficial dela e revise cada comando antes de executá-lo.</li>
+              </ol>
+            </div>
+            <div class="callout callout-warning"><strong>🔐 Cuide das suas chaves.</strong> Nunca compartilhe senha nem chave <code>secret</code> ou <code>service_role</code>. A chave pública só deve ser usada no navegador com as regras de acesso (RLS) corretas.</div>
+            <div class="callout"><strong>Se os dados não aparecerem:</strong> confira se está no projeto certo e se a tabela tem linhas. Com RLS ligado, o banco também precisa de uma regra de leitura para o tipo de acesso usado. Não desligue o RLS só para fazer funcionar; veja o erro no Console (F12) ou peça ajuda na Aula 3.</div>
             <div class="exercise-box"><span class="exercise-label">ATIVIDADE · 40 MIN</span><h3>Faça seu projeto lembrar</h3><ol class="task-list"><li>Crie ou acesse sua conta do Supabase.</li><li>Conecte o banco à ferramenta de IA escolhida.</li><li>Siga o plano e mova os dados para as tabelas.</li><li>Feche a aba, abra de novo e confira os dados.</li></ol><p class="small-note">Exercício 2: cada trilha tem suas tabelas e seu próprio critério de pronto. Nesta fase, o material orienta não criar login nem área de administração.</p>
             <h3 class="subheading">Exercício 2 · o que muda em cada trilha?</h3>
             <div class="track-grid">

@@ -15,14 +15,11 @@ Open `index.html` in a browser. The page uses plain HTML, CSS, and JavaScript, s
 
 The learning page covers the provided materials for Lessons 1–3. Lesson 4 is shown as the next step from the project plan; its detailed lesson material has not yet been provided.
 
-## Supabase setup
+## Supabase lesson
 
-1. Run the SQL file in `supabase/migrations/` using the Supabase SQL Editor.
-2. Open the page and expand **Conectar ao Supabase**.
-3. Enter the project URL and the public publishable key (or legacy anon key). The values stay in that browser only.
-4. The page reads the `fases` table. Browser access is read-only; use the Supabase dashboard to edit a phase.
+The learning page does not ask visitors for a Supabase URL or key and does not connect to databases they provide. The Supabase exercise is explained in Lesson 2 so each learner can connect their own project using their chosen AI tool.
 
-The migration follows the course exercise by deferring RLS. It revokes browser write permissions and grants read access only to the public course phases. Configure and verify RLS before publishing a connected site. Never put a secret or service_role key in the browser or repository.
+The example migration creates the public course phases table. It enables RLS, grants browser roles read-only access, and adds a read policy for this public content. Never put a secret or service_role key in the browser or repository.
 
 ## Contribution flow
 
