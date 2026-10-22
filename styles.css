@@ -139,3 +139,30 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
 .track-card strong { color: var(--plum); }
 .track-card p { margin: .45rem 0 0; color: var(--muted); font-size: .88rem; }
 @media (max-width: 560px) { .track-grid { grid-template-columns: 1fr; } }
+
+
+.database-connection { margin: 1.2rem 0 .7rem; border: 1px solid var(--line); border-radius: 16px; background: var(--white); }
+.database-connection > summary { display: flex; align-items: center; gap: .7rem; padding: .9rem 1rem; cursor: pointer; list-style: none; }
+.database-connection > summary::-webkit-details-marker { display: none; }
+.database-connection > summary span:last-child { display: grid; }
+.database-connection > summary small { color: var(--muted); font-size: .78rem; }
+.connection-icon { display: grid; width: 2rem; height: 2rem; place-items: center; border-radius: 50%; background: var(--blue); color: var(--plum); font-weight: 800; }
+.connection-body { padding: 0 1rem 1rem; }
+.connection-body > p { max-width: 55rem; color: var(--muted); font-size: .9rem; }
+.connection-form { display: grid; grid-template-columns: 1fr 1fr; gap: .75rem; }
+.connection-form label { display: grid; gap: .35rem; font-size: .85rem; font-weight: 700; }
+.connection-form input { width: 100%; min-height: 2.8rem; padding: .65rem .75rem; border: 1px solid #cfc7d1; border-radius: 9px; background: white; color: var(--ink); font: inherit; }
+.connection-actions { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; }
+.connection-actions .button { border: 0; cursor: pointer; font-size: .88rem; }
+.clear-button { border: 0; padding: .6rem .8rem; background: transparent; color: var(--muted); text-decoration: underline; cursor: pointer; }
+.connection-note { margin: .9rem 0 0; font-size: .8rem !important; }
+.connection-status { padding: .6rem .9rem; border-radius: 10px; background: #f1eee9; color: var(--muted); font-size: .85rem; }
+.connection-status[data-state="loading"] { background: #edf3f5; color: #435e6b; }
+.connection-status[data-state="success"] { background: #edf3e9; color: #3e6340; }
+.connection-status[data-state="error"] { background: #faece9; color: #842f28; }
+.connection-status[data-state="empty"] { background: #faf1e8; color: #77522e; }
+@media (max-width: 560px) {
+  .connection-form { grid-template-columns: 1fr; }
+  .connection-actions { grid-column: 1; align-items: stretch; flex-direction: column; }
+  .connection-actions .button { justify-content: center; }
+}

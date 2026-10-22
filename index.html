@@ -39,11 +39,31 @@
         <div><p class="eyebrow">O CAMINHO</p><h2>Quatro etapas, uma casa</h2></div>
         <p>Cada aula constrói uma parte. Faça na ordem e avance quando a etapa estiver funcionando.</p>
       </div>
+      <details class="database-connection">
+        <summary><span class="connection-icon" aria-hidden="true">↗</span><span><strong>Conectar ao Supabase</strong><small>Salvo só neste navegador</small></span></summary>
+        <div class="connection-body">
+          <p>Use a URL do projeto e uma chave pública para buscar as quatro etapas. A chave fica salva só neste navegador.</p>
+          <form id="supabase-config-form" class="connection-form">
+            <label for="supabase-url">URL do projeto
+              <input id="supabase-url" name="url" type="url" inputmode="url" placeholder="https://seu-projeto.supabase.co" autocomplete="url" required>
+            </label>
+            <label for="supabase-key">Chave pública (publishable ou anon)
+              <input id="supabase-key" name="key" type="password" autocomplete="off" placeholder="Cole a chave pública" required>
+            </label>
+            <div class="connection-actions">
+              <button class="button button-primary" type="submit">Conectar e carregar</button>
+              <button class="clear-button" id="clear-supabase-config" type="button">Apagar configuração</button>
+            </div>
+          </form>
+          <p class="connection-note">Nunca use uma chave secret ou service_role aqui. A tabela da aula permite só leitura. Configure RLS antes de publicar o site conectado.</p>
+        </div>
+      </details>
+      <p class="connection-status" id="connection-status" role="status" aria-live="polite">Mostrando as etapas do plano. Conecte o Supabase para buscar os títulos da tabela.</p>
       <div class="phase-grid">
-        <a class="phase-card phase-peach" href="#aula-1"><span class="phase-number">01</span><span class="phase-icon" aria-hidden="true">☀</span><h3>A Fachada</h3><p>A tela que a pessoa vê e usa.</p><span class="phase-meta">Aula 1 · Interface</span></a>
-        <a class="phase-card phase-blue" href="#aula-2"><span class="phase-number">02</span><span class="phase-icon" aria-hidden="true">▤</span><h3>O Caderno</h3><p>Onde os dados ficam guardados.</p><span class="phase-meta">Aula 2 · Banco de dados</span></a>
-        <a class="phase-card phase-lilac" href="#aula-3"><span class="phase-number">03</span><span class="phase-icon" aria-hidden="true">✎</span><h3>A Reforma</h3><p>Como melhorar e encontrar erros.</p><span class="phase-meta">Aula 3 · Expansão e correção</span></a>
-        <a class="phase-card phase-green" href="#aula-4"><span class="phase-number">04</span><span class="phase-icon" aria-hidden="true">⌑</span><h3>A Fechadura</h3><p>Uma entrada protegida por login.</p><span class="phase-meta">Aula 4 · Login</span></a>
+        <a class="phase-card phase-peach" data-phase-id="1" href="#aula-1"><span class="phase-number">01</span><span class="phase-icon" aria-hidden="true">☀</span><h3>A Fachada</h3><p>A tela que a pessoa vê e usa.</p><span class="phase-meta">Aula 1 · Interface</span></a>
+        <a class="phase-card phase-blue" data-phase-id="2" href="#aula-2"><span class="phase-number">02</span><span class="phase-icon" aria-hidden="true">▤</span><h3>O Caderno</h3><p>Onde os dados ficam guardados.</p><span class="phase-meta">Aula 2 · Banco de dados</span></a>
+        <a class="phase-card phase-lilac" data-phase-id="3" href="#aula-3"><span class="phase-number">03</span><span class="phase-icon" aria-hidden="true">✎</span><h3>A Reforma</h3><p>Como melhorar e encontrar erros.</p><span class="phase-meta">Aula 3 · Expansão e correção</span></a>
+        <a class="phase-card phase-green" data-phase-id="4" href="#aula-4"><span class="phase-number">04</span><span class="phase-icon" aria-hidden="true">⌑</span><h3>A Fechadura</h3><p>Uma entrada protegida por login.</p><span class="phase-meta">Aula 4 · Login</span></a>
       </div>
       <p class="roadmap-note"><span aria-hidden="true">i</span> Os materiais detalhados enviados cobrem as Aulas 1, 2 e 3. A Aula 4 aparece no plano como próxima etapa; o conteúdo dela ainda não foi enviado.</p>
     </section>
