@@ -122,6 +122,78 @@ async function loadPhases() {
   }
 }
 
+async function loadCourseLessons() {
+  const config = window.VIBE_SUPABASE_CONFIG;
+  if (!config?.url || !config?.publishableKey) return;
+  const headers = { apikey: config.publishableKey };
+  if (!config.publishableKey.startsWith("sb_publishable_")) {
+    headers.Authorization = `Bearer ${config.publishableKey}`;
+  }
+  try {
+    const lessonsUrl = new URL("/rest/v1/aulas", config.url);
+    lessonsUrl.search = new URLSearchParams({
+      select: "id,titulo,resumo,ordem,aula_passos(id,tipo,titulo,conteudo,ordem)",
+      publicada: "eq.true",
+      order: "ordem.asc"
+    });
+    const response = await fetch(lessonsUrl, { headers });
+    if (!response.ok) return;
+    const rows = await response.json();
+    const container = document.querySelector("#extra-lessons");
+    container.replaceChildren();
+    rows.forEach((lesson, lessonIndex) => {
+      const article = document.createElement("article");
+      article.className = `lesson lesson-${["peach", "blue", "lilac", "green"][lessonIndex % 4]}`;
+      const details = document.createElement("details");
+      const summary = document.createElement("summary");
+      const tag = document.createElement("span");
+      tag.className = "lesson-tag";
+      tag.textContent = `AULA EXTRA · ${lesson.ordem}`;
+      const title = document.createElement("span");
+      title.className = "summary-title";
+      title.textContent = lesson.titulo;
+      const hint = document.createElement("span");
+      hint.className = "summary-hint";
+      hint.textContent = "Abrir ou fechar";
+      summary.append(tag, title, hint);
+      const body = document.createElement("div");
+      body.className = "lesson-body";
+      if (lesson.resumo) {
+        const intro = document.createElement("p");
+        intro.className = "plain-intro";
+        intro.textContent = lesson.resumo;
+        body.append(intro);
+      }
+      const steps = (lesson.aula_passos || []).sort((a, b) => a.ordem - b.ordem);
+      steps.forEach((step, index) => {
+        const card = document.createElement("div");
+        card.className = "info-card";
+        const heading = document.createElement("h3");
+        heading.textContent = `${index + 1}. ${step.titulo}`;
+        const content = document.createElement(step.tipo === "prompt" ? "pre" : "p");
+        content.className = step.tipo === "prompt" ? "lesson-prompt" : "";
+        content.textContent = step.conteudo;
+        card.append(heading, content);
+        body.append(card);
+      });
+      details.append(summary, body);
+      article.append(details);
+      container.append(article);
+    });
+    const dynamicLessons = [...container.querySelectorAll("details")];
+    dynamicLessons.forEach((current) => {
+      current.addEventListener("toggle", () => {
+        if (!current.open) return;
+        [...document.querySelectorAll(".lesson details")].forEach((other) => {
+          if (other !== current) other.open = false;
+        });
+      });
+    });
+  } catch {
+    // A página continua mostrando o conteúdo fixo se o Supabase estiver indisponível.
+  }
+}
+
 async function copyText(text) {
   if (navigator.clipboard && window.isSecureContext) {
     await navigator.clipboard.writeText(text);
@@ -153,3 +225,4 @@ document.querySelectorAll("[data-copy]").forEach((button) => {
 });
 
 loadPhases();
+loadCourseLessons();
