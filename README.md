@@ -13,7 +13,7 @@ Open `index.html` in a browser. The page uses plain HTML, CSS, and JavaScript, s
 3. **The renovation:** add one improvement at a time or investigate a bug.
 4. **The lock:** protect editing with login.
 
-The learning page covers the provided materials for Lessons 1–3. Lesson 4 is shown as the next step from the project plan; its detailed lesson material has not yet been provided.
+The learning page covers the provided materials for Lessons 1–4, with simple explanations, guided activities, and copyable prompts.
 
 ## Supabase setup
 
