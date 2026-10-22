@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fffaf7">
+  <meta name="description" content="Área privada de edição das etapas do curso Vibe em Etapas.">
+  <title>Área de edição — Vibe em Etapas</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="supabase-config.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="admin.js"></script>
+</head>
+<body class="admin-page">
+  <a class="skip-link" href="#admin-main">Pular para o conteúdo</a>
+  <header class="topbar">
+    <a class="brand" href="index.html" aria-label="Vibe em Etapas, página inicial">
+      <span class="brand-mark" aria-hidden="true">✳</span>
+      <span>vibe <strong>em etapas</strong></span>
+    </a>
+    <a class="top-link" href="index.html">Voltar às aulas</a>
+  </header>
+
+  <main class="admin-main section-wrap" id="admin-main">
+    <p class="eyebrow">ÁREA PRIVADA</p>
+    <h1>Cuide das etapas<br><span>com segurança.</span></h1>
+    <p class="hero-lede">Entre com a conta cadastrada no Supabase para adicionar ou editar as etapas do curso.</p>
+
+    <p class="admin-message" id="admin-message" role="status" aria-live="polite"></p>
+
+    <section class="admin-panel" id="login-panel" aria-labelledby="login-title">
+      <h2 id="login-title">Entrar</h2>
+      <form id="login-form">
+        <label for="login-email">E-mail</label>
+        <input id="login-email" name="email" type="email" autocomplete="username" required>
+        <label for="login-password">Senha</label>
+        <input id="login-password" name="password" type="password" autocomplete="current-password" required>
+        <button class="button button-primary" type="submit">Entrar na área de edição</button>
+      </form>
+      <button class="admin-text-button" id="request-reset" type="button">Esqueci minha senha</button>
+      <p class="small-note">O cadastro é feito pela pessoa responsável no painel do Supabase. Esta página não cria contas.</p>
+    </section>
+
+    <section class="admin-panel" id="password-panel" aria-labelledby="password-title" hidden>
+      <h2 id="password-title">Criar uma nova senha</h2>
+      <form id="password-form">
+        <label for="new-password">Nova senha</label>
+        <input id="new-password" name="password" type="password" autocomplete="new-password" minlength="8" required>
+        <button class="button button-primary" type="submit">Salvar nova senha</button>
+      </form>
+    </section>
+
+    <section class="admin-panel" id="denied-panel" aria-labelledby="denied-title" hidden>
+      <h2 id="denied-title">Esta conta não pode editar</h2>
+      <p>A entrada funcionou, mas esta conta não está na lista de pessoas autorizadas a mudar as etapas.</p>
+      <button class="button button-dark" id="denied-sign-out" type="button">Sair</button>
+    </section>
+
+    <section class="admin-workspace" id="editor-panel" aria-labelledby="editor-title" hidden>
+      <div class="admin-workspace-heading">
+        <div>
+          <h2 id="editor-title">Etapas do curso</h2>
+          <p>Conectada como <strong id="current-user"></strong></p>
+        </div>
+        <button class="button button-dark" id="sign-out" type="button">Sair</button>
+      </div>
+
+      <div class="admin-columns">
+        <section class="admin-panel" aria-labelledby="phase-list-title">
+          <h3 id="phase-list-title">Etapas existentes</h3>
+          <div class="admin-phase-list" id="phase-list"></div>
+          <button class="button button-secondary" id="new-phase" type="button">Adicionar etapa</button>
+        </section>
+
+        <section class="admin-panel" aria-labelledby="phase-form-title">
+          <h3 id="phase-form-title">Editar etapa</h3>
+          <form id="phase-form">
+            <input id="phase-id" name="id" type="hidden">
+            <label for="phase-title">Título</label>
+            <input id="phase-title" name="title" maxlength="100" required>
+            <label for="phase-description">Descrição</label>
+            <textarea id="phase-description" name="description" rows="4" maxlength="300" required></textarea>
+            <button class="button button-primary" type="submit">Salvar etapa</button>
+            <button class="admin-text-button" id="cancel-edit" type="button" hidden>Cancelar edição</button>
+          </form>
+          <p class="small-note">A página pública continua aberta para leitura. Só uma conta autorizada pode salvar mudanças.</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>Vibe em Etapas · Acesso de edição protegido</p>
+    <a href="index.html">Voltar às aulas</a>
+  </footer>
+</body>
+</html>
