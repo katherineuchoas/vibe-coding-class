@@ -16,6 +16,7 @@ const cancelEdit = document.querySelector("#cancel-edit");
 const currentUser = document.querySelector("#current-user");
 let client;
 let phases = [];
+let passwordRecoveryActive = window.location.hash.includes("type=recovery");
 
 function showMessage(text, state = "") {
   message.textContent = text;
@@ -92,6 +93,10 @@ async function loadPhases() {
 }
 
 async function openWorkspace(session) {
+  if (passwordRecoveryActive) {
+    showPanel(passwordPanel);
+    return;
+  }
   if (!session?.user) {
     showPanel(loginPanel);
     return;
@@ -140,6 +145,7 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
   // Keep this callback synchronous; other Supabase requests run outside it.
   client.auth.onAuthStateChange((event) => {
     if (event === "PASSWORD_RECOVERY") {
+      passwordRecoveryActive = true;
       showPanel(passwordPanel);
       showMessage("Crie uma nova senha para sua conta.");
     }
@@ -192,6 +198,8 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
       return;
     }
     passwordForm.reset();
+    passwordRecoveryActive = false;
+    window.history.replaceState({}, document.title, window.location.pathname);
     const { data } = await client.auth.getSession();
     showMessage("Senha atualizada.", "success");
     await openWorkspace(data.session);
