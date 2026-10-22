@@ -174,10 +174,55 @@ Depois, sugira a menor correção e diga como conferir se as telas antigas conti
 
       <article class="lesson lesson-green" id="aula-4">
         <details>
-          <summary><span class="lesson-tag">AULA 4 · LOGIN</span><span class="summary-title">Proteja a área de edição</span><span class="summary-hint">Abrir ou fechar</span></summary>
+          <summary><span class="lesson-tag">AULA 4 · LOGIN E SEGURANÇA</span><span class="summary-title">Escolha quem pode entrar</span><span class="summary-hint">Abrir ou fechar</span></summary>
           <div class="lesson-body">
-            <p class="plain-intro">O plano do projeto chama esta etapa de “A Fechadura”: criar uma tela de login para que só você possa alterar o conteúdo.</p>
-            <div class="callout"><strong>O material detalhado desta aula ainda não foi enviado.</strong> Por isso, esta página não inventa instruções de configuração. O plano só indica que o login vem depois das fases de interface, dados e melhoria.</div>
+            <p class="plain-intro">O login é a última fechadura do projeto. Primeiro, decidimos quais telas podem ser vistas por qualquer pessoa e quais precisam de uma conta. Depois, protegemos a tela e os dados guardados.</p>
+            <div class="two-columns">
+              <div class="info-card"><h3>Duas perguntas diferentes</h3><p><strong>Autenticação:</strong> confirma quem é você, como conferir o ingresso na entrada.</p><p><strong>Permissão:</strong> define o que você pode fazer depois de entrar, como escolher em qual área pode circular.</p></div>
+              <div class="info-card soft-lilac"><h3>Duas fechaduras</h3><p><strong>A porta:</strong> a tela manda quem não entrou para a página pública.</p><p><strong>O cofre:</strong> o banco de dados também confere a permissão, mesmo se alguém tentar pular a tela.</p></div>
+            </div>
+            <h3 class="subheading">Palavras sem susto</h3>
+            <div class="glossary-grid">
+              <p><strong>Sessão</strong><br>O navegador lembra que você já entrou.</p>
+              <p><strong>Rota</strong><br>O endereço de uma parte do site, como uma área de edição.</p>
+              <p><strong>Redirecionar</strong><br>Levar a pessoa para outra página, por exemplo, quando ela não entrou.</p>
+              <p><strong>Supabase Auth</strong><br>O serviço do Supabase que cuida de contas e login.</p>
+              <p><strong>RLS</strong><br>Regras no banco que limitam quais dados cada pessoa pode ver ou mudar.</p>
+              <p><strong>Conta de teste</strong><br>Uma segunda conta para conferir se os dados ficam separados.</p>
+            </div>
+            <h3 class="subheading">Primeiro, separe as telas</h3>
+            <div class="track-grid">
+              <div class="track-card"><strong>Presença digital</strong><p>A página pública pode ser vista por todas as pessoas. A área de edição é só para você.</p></div>
+              <div class="track-card"><strong>Produtividade</strong><p>Tarefas e hábitos são privados: cada pessoa vê e muda os próprios dados.</p></div>
+              <div class="track-card"><strong>Recolocação</strong><p>Currículo, vagas e análises são privados e ficam ligados à conta da pessoa.</p></div>
+              <div class="track-card"><strong>Ideia própria</strong><p>Liste suas telas e marque cada uma como pública ou privada.</p></div>
+            </div>
+            <p class="small-note">Pergunta para decidir: “Se uma pessoa desconhecida abrir esta tela, tudo bem?” Para este material de aulas, a leitura das fases é pública; uma futura área de edição deve ser privada.</p>
+            <h3 class="subheading">O passo a passo da Fase 4</h3>
+            <ol class="number-list">
+              <li>Leia o plano e marque o que é público e o que é privado.</li>
+              <li>Desenhe o caminho: entrar, recuperar a senha, sair e decidir para onde vai quem não entrou.</li>
+              <li>Peça à IA para proteger a tela e os dados no banco, sem mexer no que já funciona.</li>
+              <li>No Supabase, crie uma conta de teste em <strong>Authentication → Users</strong>. Para o exercício, o material orienta ativar a confirmação automática da conta de teste.</li>
+              <li>Teste manualmente cada caminho: sem login, senha errada e uma segunda conta.</li>
+            </ol>
+            <div class="callout callout-warning"><strong>Segurança não é só esconder a tela.</strong> A regra do banco também precisa impedir que alguém leia ou altere dados sem permissão. Nunca coloque uma chave <code>secret</code> ou <code>service_role</code> no navegador.</div>
+            <div class="prompt-card">
+              <div class="prompt-heading"><span>✦</span><div><h3>Prompt para planejar o login</h3><p>Complete os colchetes com o seu plano antes de pedir mudanças.</p></div><button class="copy-button" type="button" data-copy="prompt-fase4">Copiar</button></div>
+              <pre id="prompt-fase4">Leia meu PLANO.md. Vamos implementar SOMENTE a Fase 4: login e segurança.
+
+Telas públicas: [liste].
+Telas privadas: [liste].
+Quem pode ver e mudar cada tipo de dado: [explique].
+Caminhos necessários: entrar, sair, recuperar senha e o que acontece sem login.
+
+Proteja a tela e também os dados no Supabase com as regras de acesso do projeto.
+Não altere as Fases 1, 2 e 3 que já funcionam.
+Vou testar manualmente; não precisa executar testes.
+Antes de mudar o banco ou inventar uma regra, explique o plano e me pergunte se algo estiver faltando.
+Quando terminar, diga como posso testar cada caminho.</pre>
+            </div>
+            <div class="exercise-box"><span class="exercise-label">ATIVIDADE · 40 MIN</span><h3>Instale e teste a fechadura</h3><ol class="task-list"><li>Marque cada tela como pública ou privada.</li><li>Revise o plano e construa só a Fase 4.</li><li>Crie uma conta de teste no Supabase.</li><li>Tente entrar sem conta e com e-mail ou senha errados.</li><li>Use uma segunda conta para conferir que ela não vê os dados da primeira.</li><li>Confira se o que já funcionava antes continua funcionando.</li></ol><p class="small-note">Na trilha de presença digital, a página pública continua aberta; sem login, a área de edição fica bloqueada.</p></div>
           </div>
         </details>
       </article>
