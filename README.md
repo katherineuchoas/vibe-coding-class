@@ -19,7 +19,7 @@ The learning page covers the provided materials for Lessons 1–3. Lesson 4 is s
 
 The page reads only the Supabase project configured for this app; visitors cannot enter a URL or key. Set the project URL and public publishable (or legacy anon) key in `supabase-config.js`. Never use a secret or service_role key.
 
-Follow Lesson 2 to connect the AI tool to Supabase through its connector, create the tables from the project plan, and confirm they exist. Run the example migration in `supabase/migrations/` using the Supabase SQL Editor. Login and RLS are left for the lessons that cover those topics.
+Follow Lesson 2 to connect the AI tool to Supabase through its connector, create the tables from the project plan, and confirm they exist. Apply the migrations in `supabase/migrations/` to the same Supabase project, using the connected Supabase MCP or SQL Editor. Phase 4 adds login for the private editor and RLS policies: visitors can read course phases, while only an explicitly registered admin can add or edit them. Follow `supabase/PHASE_4_SETUP.md` to create the first admin safely.
 
 
 ## Contribution flow
