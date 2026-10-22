@@ -15,11 +15,12 @@ Open `index.html` in a browser. The page uses plain HTML, CSS, and JavaScript, s
 
 The learning page covers the provided materials for Lessons 1–3. Lesson 4 is shown as the next step from the project plan; its detailed lesson material has not yet been provided.
 
-## Supabase lesson
+## Supabase setup
 
-The learning page does not ask visitors for a Supabase URL or key and does not connect to databases they provide. The Supabase exercise is explained in Lesson 2 so each learner can connect their own project using their chosen AI tool.
+The page reads only the Supabase project configured for this app; visitors cannot enter a URL or key. Set the project URL and public publishable (or legacy anon) key in `supabase-config.js`. Never use a secret or service_role key.
 
-The example migration creates the public course phases table. It enables RLS, grants browser roles read-only access, and adds a read policy for this public content. Never put a secret or service_role key in the browser or repository.
+Follow Lesson 2 to connect the AI tool to Supabase through its connector, create the tables from the project plan, and confirm they exist. Run the example migration in `supabase/migrations/` using the Supabase SQL Editor. Login and RLS are left for the lessons that cover those topics.
+
 
 ## Contribution flow
 
