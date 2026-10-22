@@ -2,11 +2,11 @@
 
 This project uses Supabase for login and database access. The website's publishable key is public by design; database policies decide who may change data.
 
-## 1. Apply the migration
+## 1. Apply the migrations
 
-Apply `supabase/migrations/202610220001_admin_phase_access.sql` to the same Supabase project used by `supabase-config.js`. Use the connected Supabase MCP or the Supabase SQL Editor.
+Apply the migrations in `supabase/migrations/` to the same Supabase project used by `supabase-config.js`, in filename order. Use the connected Supabase MCP or the Supabase SQL Editor.
 
-The migration keeps course phases readable by visitors and allows only users listed in `public.admin_users` to add or edit phases. It deliberately does not grant delete access.
+The phase access migration keeps course phases readable by visitors and allows only users listed in `public.admin_users` to add or edit phases. It deliberately does not grant delete access. The next migration removes browser roles' permission to call `public.rls_auto_enable()`, a `SECURITY DEFINER` helper flagged by Supabase Security Advisor. It safely does nothing if that function is absent.
 
 ## 2. Create the admin login
 
@@ -53,4 +53,5 @@ Open `https://katherineuchoas.github.io/vibe-coding-class/admin.html`, sign in, 
 - A signed-out visitor cannot edit phases.
 - A signed-in user who is not listed in `admin_users` cannot edit phases.
 - The registered admin can add and edit phases.
+- Browser roles cannot execute `public.rls_auto_enable()` directly.
 - No secret or `service_role` key is present in browser files.
