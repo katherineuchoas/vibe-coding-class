@@ -122,6 +122,64 @@ async function loadPhases() {
   }
 }
 
+function createCourseLesson(lesson, index) {
+  const article = document.createElement("article");
+  article.className = `lesson lesson-${lesson.cor || ["peach", "blue", "lilac", "green"][index % 4]}`;
+  article.id = lesson.slug || `aula-extra-${lesson.id}`;
+  const details = document.createElement("details");
+  details.open = lesson.slug === "aula-1";
+  const summary = document.createElement("summary");
+  const tag = document.createElement("span");
+  tag.className = "lesson-tag";
+  tag.textContent = `AULA ${String(lesson.ordem).padStart(2, "0")}`;
+  const title = document.createElement("span");
+  title.className = "summary-title";
+  title.textContent = lesson.titulo;
+  const hint = document.createElement("span");
+  hint.className = "summary-hint";
+  hint.textContent = "Abrir ou fechar";
+  summary.append(tag, title, hint);
+
+  const body = document.createElement("div");
+  body.className = "lesson-body";
+  if (lesson.resumo) {
+    const intro = document.createElement("p");
+    intro.className = "plain-intro";
+    intro.textContent = lesson.resumo;
+    body.append(intro);
+  }
+  const steps = (lesson.aula_passos || []).sort((a, b) => a.ordem - b.ordem);
+  steps.forEach((step, stepIndex) => {
+    const card = document.createElement("div");
+    card.className = step.tipo === "prompt" ? "prompt-card" : "info-card";
+    const heading = document.createElement(step.tipo === "prompt" ? "h3" : "h3");
+    heading.textContent = `${stepIndex + 1}. ${step.titulo}`;
+    const content = document.createElement(step.tipo === "prompt" ? "pre" : "p");
+    content.className = step.tipo === "prompt" ? "lesson-prompt" : "lesson-step-content";
+    content.textContent = step.conteudo;
+    card.append(heading, content);
+    if (step.tipo === "prompt") {
+      const copyButton = document.createElement("button");
+      copyButton.type = "button";
+      copyButton.className = "admin-text-button";
+      copyButton.textContent = "Copiar prompt";
+      copyButton.addEventListener("click", async () => {
+        try {
+          await copyText(step.conteudo);
+          showMessage("Prompt copiado. Agora é só colar na sua IA.");
+        } catch {
+          showMessage("Selecione o texto e copie.");
+        }
+      });
+      card.append(copyButton);
+    }
+    body.append(card);
+  });
+  details.append(summary, body);
+  article.append(details);
+  return article;
+}
+
 async function loadCourseLessons() {
   const config = window.VIBE_SUPABASE_CONFIG;
   if (!config?.url || !config?.publishableKey) return;
@@ -132,80 +190,32 @@ async function loadCourseLessons() {
   try {
     const lessonsUrl = new URL("/rest/v1/aulas", config.url);
     lessonsUrl.search = new URLSearchParams({
-      select: "id,titulo,resumo,ordem,aula_passos(id,tipo,titulo,conteudo,ordem)",
+      select: "id,slug,titulo,resumo,ordem,cor,aula_passos(id,tipo,titulo,conteudo,ordem)",
       publicada: "eq.true",
       order: "ordem.asc"
     });
     const response = await fetch(lessonsUrl, { headers });
     if (!response.ok) return;
     const rows = await response.json();
-    const container = document.querySelector("#extra-lessons");
-    container.replaceChildren();
-    rows.forEach((lesson, lessonIndex) => {
-      const article = document.createElement("article");
-      article.className = `lesson lesson-${["peach", "blue", "lilac", "green"][lessonIndex % 4]}`;
-      const details = document.createElement("details");
-      const summary = document.createElement("summary");
-      const tag = document.createElement("span");
-      tag.className = "lesson-tag";
-      tag.textContent = `AULA EXTRA · ${lesson.ordem}`;
-      const title = document.createElement("span");
-      title.className = "summary-title";
-      title.textContent = lesson.titulo;
-      const hint = document.createElement("span");
-      hint.className = "summary-hint";
-      hint.textContent = "Abrir ou fechar";
-      summary.append(tag, title, hint);
-      const body = document.createElement("div");
-      body.className = "lesson-body";
-      if (lesson.resumo) {
-        const intro = document.createElement("p");
-        intro.className = "plain-intro";
-        intro.textContent = lesson.resumo;
-        body.append(intro);
-      }
-      const steps = (lesson.aula_passos || []).sort((a, b) => a.ordem - b.ordem);
-      steps.forEach((step, index) => {
-        const card = document.createElement("div");
-        card.className = "info-card";
-        const heading = document.createElement("h3");
-        heading.textContent = `${index + 1}. ${step.titulo}`;
-        const content = document.createElement(step.tipo === "prompt" ? "pre" : "p");
-        content.className = step.tipo === "prompt" ? "lesson-prompt" : "";
-        content.textContent = step.conteudo;
-        card.append(heading, content);
-        if (step.tipo === "prompt") {
-          const copyButton = document.createElement("button");
-          copyButton.type = "button";
-          copyButton.className = "admin-text-button";
-          copyButton.textContent = "Copiar prompt";
-          copyButton.addEventListener("click", async () => {
-            try {
-              await copyText(step.conteudo);
-              showMessage("Prompt copiado. Agora é só colar na sua IA.");
-            } catch {
-              showMessage("Selecione o texto e copie.");
-            }
-          });
-          card.append(copyButton);
-        }
-        body.append(card);
-      });
-      details.append(summary, body);
-      article.append(details);
-      container.append(article);
+    const extraContainer = document.querySelector("#extra-lessons");
+    extraContainer.replaceChildren();
+    rows.forEach((lesson, index) => {
+      const card = createCourseLesson(lesson, index);
+      const oldCard = lesson.slug ? document.getElementById(lesson.slug) : null;
+      if (oldCard?.classList.contains("lesson")) oldCard.replaceWith(card);
+      else extraContainer.append(card);
     });
-    const dynamicLessons = [...container.querySelectorAll("details")];
-    dynamicLessons.forEach((current) => {
+    const allLessons = [...document.querySelectorAll(".lesson details")];
+    allLessons.forEach((current) => {
       current.addEventListener("toggle", () => {
         if (!current.open) return;
-        [...document.querySelectorAll(".lesson details")].forEach((other) => {
+        allLessons.forEach((other) => {
           if (other !== current) other.open = false;
         });
       });
     });
   } catch {
-    // A página continua mostrando o conteúdo fixo se o Supabase estiver indisponível.
+    // Se o Supabase estiver indisponível, o site mantém as aulas locais.
   }
 }
 
