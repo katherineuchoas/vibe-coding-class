@@ -174,6 +174,21 @@ async function loadCourseLessons() {
         content.className = step.tipo === "prompt" ? "lesson-prompt" : "";
         content.textContent = step.conteudo;
         card.append(heading, content);
+        if (step.tipo === "prompt") {
+          const copyButton = document.createElement("button");
+          copyButton.type = "button";
+          copyButton.className = "admin-text-button";
+          copyButton.textContent = "Copiar prompt";
+          copyButton.addEventListener("click", async () => {
+            try {
+              await copyText(step.conteudo);
+              showMessage("Prompt copiado. Agora é só colar na sua IA.");
+            } catch {
+              showMessage("Selecione o texto e copie.");
+            }
+          });
+          card.append(copyButton);
+        }
         body.append(card);
       });
       details.append(summary, body);
