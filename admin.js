@@ -247,7 +247,6 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
     showMessage("Etapa salva. A página pública mostrará a mudança ao atualizar.", "success");
   });
 
-  document.querySelector("#sign-out").addEventListener("click", signOut);
   client.auth.getSession().then(({ data, error }) => {
     if (error) {
       showPanel(loginPanel);
