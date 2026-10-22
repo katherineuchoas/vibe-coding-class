@@ -16,6 +16,19 @@ const cancelEdit = document.querySelector("#cancel-edit");
 const currentUser = document.querySelector("#current-user");
 let client;
 let phases = [];
+const courseLessonList = document.querySelector("#course-lesson-list");
+const courseLessonForm = document.querySelector("#course-lesson-form");
+const courseLessonId = document.querySelector("#course-lesson-id");
+const courseLessonTitle = document.querySelector("#course-lesson-title");
+const courseLessonSummary = document.querySelector("#course-lesson-summary");
+const courseStepEditor = document.querySelector("#lesson-step-editor");
+const courseStepList = document.querySelector("#lesson-step-list");
+const courseStepForm = document.querySelector("#lesson-step-form");
+const courseStepId = document.querySelector("#lesson-step-id");
+let courseLessons = [];
+let selectedCourseLessonId = null;
+let courseSteps = [];
+
 let passwordRecoveryActive = window.location.hash.includes("type=recovery");
 
 function showMessage(text, state = "") {
@@ -92,6 +105,124 @@ async function loadPhases() {
   showMessage("Etapas carregadas.", "success");
 }
 
+function renderCourseLessons() {
+  courseLessonList.replaceChildren();
+  if (!courseLessons.length) {
+    const empty = document.createElement("p");
+    empty.className = "small-note";
+    empty.textContent = "Ainda não há aulas novas.";
+    courseLessonList.append(empty);
+    return;
+  }
+  courseLessons.forEach((lesson) => {
+    const row = document.createElement("article");
+    row.className = "admin-phase-item";
+    const details = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = lesson.titulo;
+    const summary = document.createElement("p");
+    summary.textContent = lesson.resumo || "Sem resumo por enquanto.";
+    const actions = document.createElement("div");
+    actions.className = "admin-course-actions";
+    const edit = document.createElement("button");
+    edit.className = "admin-text-button";
+    edit.type = "button";
+    edit.textContent = "Editar aula e passos";
+    edit.addEventListener("click", () => selectCourseLesson(lesson));
+    const visibility = document.createElement("span");
+    visibility.className = "small-note";
+    visibility.textContent = lesson.publicada ? "Visível" : "Rascunho";
+    details.append(title, summary);
+    actions.append(edit, visibility);
+    row.append(details, actions);
+    courseLessonList.append(row);
+  });
+}
+
+async function loadCourseLessons() {
+  const { data, error } = await client.from("aulas")
+    .select("id,titulo,resumo,ordem,publicada")
+    .order("ordem", { ascending: true });
+  if (error) {
+    showMessage("Não consegui carregar as aulas novas. Aplique a migration da Fase 5.", "error");
+    return;
+  }
+  courseLessons = data || [];
+  renderCourseLessons();
+  if (selectedCourseLessonId) {
+    const lesson = courseLessons.find((item) => item.id === selectedCourseLessonId);
+    if (lesson) await selectCourseLesson(lesson);
+  }
+}
+
+async function selectCourseLesson(lesson) {
+  selectedCourseLessonId = lesson.id;
+  courseLessonId.value = lesson.id;
+  courseLessonTitle.value = lesson.titulo;
+  courseLessonSummary.value = lesson.resumo || "";
+  document.querySelector("#course-lesson-order").value = lesson.ordem;
+  document.querySelector("#course-lesson-published").checked = lesson.publicada;
+  courseStepEditor.hidden = false;
+  await loadCourseSteps();
+}
+
+function startNewCourseLesson() {
+  selectedCourseLessonId = null;
+  courseLessonForm.reset();
+  courseLessonId.value = "";
+  document.querySelector("#course-lesson-order").value = String(courseLessons.length + 1);
+  courseStepEditor.hidden = true;
+  courseLessonTitle.focus();
+}
+
+function renderCourseSteps() {
+  courseStepList.replaceChildren();
+  if (!courseSteps.length) {
+    const empty = document.createElement("p");
+    empty.className = "small-note";
+    empty.textContent = "Esta aula ainda não tem passos. Crie o primeiro abaixo.";
+    courseStepList.append(empty);
+    return;
+  }
+  courseSteps.forEach((step) => {
+    const row = document.createElement("article");
+    row.className = "admin-phase-item";
+    const copy = document.createElement("div");
+    const title = document.createElement("strong");
+    title.textContent = step.titulo;
+    const body = document.createElement("p");
+    body.textContent = step.conteudo;
+    const edit = document.createElement("button");
+    edit.className = "admin-text-button";
+    edit.type = "button";
+    edit.textContent = "Editar passo";
+    edit.addEventListener("click", () => {
+      courseStepId.value = step.id;
+      document.querySelector("#lesson-step-type").value = step.tipo;
+      document.querySelector("#lesson-step-title").value = step.titulo;
+      document.querySelector("#lesson-step-content").value = step.conteudo;
+      document.querySelector("#lesson-step-order").value = step.ordem;
+      document.querySelector("#lesson-step-title").focus();
+    });
+    copy.append(title, body, edit);
+    row.append(copy);
+    courseStepList.append(row);
+  });
+}
+
+async function loadCourseSteps() {
+  const { data, error } = await client.from("aula_passos")
+    .select("id,aula_id,tipo,titulo,conteudo,ordem")
+    .eq("aula_id", selectedCourseLessonId)
+    .order("ordem", { ascending: true });
+  if (error) {
+    showMessage("Não consegui carregar os passos desta aula.", "error");
+    return;
+  }
+  courseSteps = data || [];
+  renderCourseSteps();
+}
+
 async function openWorkspace(session) {
   if (passwordRecoveryActive) {
     showPanel(passwordPanel);
@@ -123,6 +254,7 @@ async function openWorkspace(session) {
 
   showPanel(editorPanel);
   await loadPhases();
+  await loadCourseLessons();
 }
 
 async function signOut() {
@@ -203,6 +335,58 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
     const { data } = await client.auth.getSession();
     showMessage("Senha atualizada.", "success");
     await openWorkspace(data.session);
+  });
+
+  document.querySelector("#new-course-lesson").addEventListener("click", startNewCourseLesson);
+  courseLessonForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    const values = {
+      titulo: courseLessonTitle.value.trim(),
+      resumo: courseLessonSummary.value.trim(),
+      ordem: Number(document.querySelector("#course-lesson-order").value),
+      publicada: document.querySelector("#course-lesson-published").checked
+    };
+    const result = courseLessonId.value
+      ? await client.from("aulas").update(values).eq("id", courseLessonId.value)
+      : await client.from("aulas").insert(values).select("id").single();
+    if (result.error) {
+      showMessage("Não consegui salvar a aula. Confira a conexão e as regras de acesso.", "error");
+      return;
+    }
+    if (!courseLessonId.value) selectedCourseLessonId = result.data.id;
+    showMessage("Aula salva.", "success");
+    await loadCourseLessons();
+  });
+
+  document.querySelector("#new-lesson-step").addEventListener("click", () => {
+    courseStepForm.reset();
+    courseStepId.value = "";
+    document.querySelector("#lesson-step-order").value = String(courseSteps.length + 1);
+    document.querySelector("#lesson-step-title").focus();
+  });
+
+  courseStepForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    if (!selectedCourseLessonId) return;
+    const values = {
+      aula_id: selectedCourseLessonId,
+      tipo: document.querySelector("#lesson-step-type").value,
+      titulo: document.querySelector("#lesson-step-title").value.trim(),
+      conteudo: document.querySelector("#lesson-step-content").value.trim(),
+      ordem: Number(document.querySelector("#lesson-step-order").value)
+    };
+    const result = courseStepId.value
+      ? await client.from("aula_passos").update(values).eq("id", courseStepId.value)
+      : await client.from("aula_passos").insert(values);
+    if (result.error) {
+      showMessage("Não consegui salvar o passo. Confira a conexão e as regras de acesso.", "error");
+      return;
+    }
+    courseStepForm.reset();
+    courseStepId.value = "";
+    document.querySelector("#lesson-step-order").value = String(courseSteps.length + 1);
+    showMessage("Passo salvo.", "success");
+    await loadCourseSteps();
   });
 
   document.querySelector("#new-phase").addEventListener("click", startNewPhase);
