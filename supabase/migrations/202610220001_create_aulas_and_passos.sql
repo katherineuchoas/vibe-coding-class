@@ -54,7 +54,7 @@ create policy "Admins can manage lesson steps" on public.aula_passos
   using (auth.uid() in (select user_id from public.admin_users))
   with check (auth.uid() in (select user_id from public.admin_users));
 
--- Import all four existing lessons and their text as separate editable steps.
+-- Import all four existing lessons and their source text as separate editable steps.
 insert into public.aulas (slug,titulo,resumo,ordem,cor,publicada)
 values
   ('aula-1','Diga à IA o que você imagina','Vibe coding é criar com a ajuda de uma IA. Você explica sua ideia com palavras; a IA ajuda a transformar isso em um projeto. Quanto mais claro o pedido, mais perto o resultado fica do que você imaginou.',1,'peach',true),
@@ -161,7 +161,7 @@ Se faltar uma informação, pergunte antes de inventar.',12
 from public.aulas where slug='aula-1'
 and not exists (select 1 from public.aula_passos p where p.aula_id=public.aulas.id and p.ordem=12);
 insert into public.aula_passos (aula_id,tipo,titulo,conteudo,ordem)
-select id,'atividade','Planeje e mostre a primeira tela','• Escolha uma ideia e conte o contexto.
+select id,'atividade','Planeje e mostre a primeira tela','Duração sugerida: 50 min.\n\n• Escolha uma ideia e conte o contexto.
 • Peça um plano. Responda às perguntas da IA.
 • Peça a outra IA uma revisão e ajuste o plano.
 • Construa só a primeira tela.
@@ -195,7 +195,8 @@ select id,'explicacao','O passo a passo da Fase 2','',3
 from public.aulas where slug='aula-2'
 and not exists (select 1 from public.aula_passos p where p.aula_id=public.aulas.id and p.ordem=3);
 insert into public.aula_passos (aula_id,tipo,titulo,conteudo,ordem)
-select id,'explicacao','• Veja no plano quais informações precisam ficar guardadas.','• Escolha e configure o banco de dados.
+select id,'explicacao','Passo 4','• Veja no plano quais informações precisam ficar guardadas.
+• Escolha e configure o banco de dados.
 • Crie as tabelas e coloque os dados do projeto.
 • Troque a memória do navegador pelo banco, sem mudar a tela.
 • Feche e abra de novo para conferir se os dados continuam lá.',4
@@ -235,7 +236,7 @@ select id,'explicacao','Se as fases não aparecerem:','Se as fases não aparecer
 from public.aulas where slug='aula-2'
 and not exists (select 1 from public.aula_passos p where p.aula_id=public.aulas.id and p.ordem=8);
 insert into public.aula_passos (aula_id,tipo,titulo,conteudo,ordem)
-select id,'atividade','Faça seu projeto lembrar','• Crie ou acesse sua conta do Supabase.
+select id,'atividade','Faça seu projeto lembrar','Duração sugerida: 40 min.\n\n• Crie ou acesse sua conta do Supabase.
 • Conecte o banco à ferramenta de IA escolhida.
 • Siga o plano e mova os dados para as tabelas.
 • Feche a aba, abra de novo e confira os dados.
@@ -297,7 +298,7 @@ Depois, sugira a menor correção e diga como conferir se as telas antigas conti
 from public.aulas where slug='aula-3'
 and not exists (select 1 from public.aula_passos p where p.aula_id=public.aulas.id and p.ordem=4);
 insert into public.aula_passos (aula_id,tipo,titulo,conteudo,ordem)
-select id,'atividade','Expanda ou investigue','• Se o app funciona, escolha uma ideia e priorize por impacto e esforço.
+select id,'atividade','Expanda ou investigue','Duração sugerida: 40 min.\n\n• Se o app funciona, escolha uma ideia e priorize por impacto e esforço.
 • Escreva um plano curto e peça uma revisão.
 • Construa uma função por vez.
 • Teste a função nova, as antigas, os dados e o Console.
@@ -403,7 +404,7 @@ Quando terminar, diga como posso testar cada caminho.',14
 from public.aulas where slug='aula-4'
 and not exists (select 1 from public.aula_passos p where p.aula_id=public.aulas.id and p.ordem=14);
 insert into public.aula_passos (aula_id,tipo,titulo,conteudo,ordem)
-select id,'atividade','Instale e teste a fechadura','• Marque cada tela como pública ou privada.
+select id,'atividade','Instale e teste a fechadura','Duração sugerida: 40 min.\n\n• Marque cada tela como pública ou privada.
 • Revise o plano e construa só a Fase 4.
 • Crie uma conta de teste no Supabase.
 • Tente entrar sem conta e com e-mail ou senha errados.
