@@ -49,6 +49,7 @@ h1 span { color: #a85f76; }
 .hero-orbit:hover .hero-electron, .hero-orbit:focus-visible .hero-electron { opacity: .85; transform: scale(1); animation: electron-drift 3.8s ease-in-out infinite alternate; }
 .hero-orbit:focus-visible { outline: 2px solid #a8736c; outline-offset: 4px; }
 @keyframes electron-drift { to { translate: -1.1rem 1.5rem; } }
+@media (prefers-reduced-motion: reduce) { .hero-orbit::before, .hero-orbit::after, .hero-electron { transition: none; } .hero-orbit:hover .hero-electron, .hero-orbit:focus-visible .hero-electron { animation: none; } }
 .hero-note p { position: relative; z-index: 1; margin: .5rem 0; font-family: Georgia, serif; font-size: 1.2rem; line-height: 1.55; }
 .note-spark { color: #a8736c; font-size: 1.5rem; }
 .note-doodle { position: absolute; bottom: .65rem; right: 1.6rem; color: #a8736c; font-size: 2.2rem; }
@@ -360,3 +361,12 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
   .admin-panel { padding: 1rem; }
   .admin-workspace-heading { align-items: flex-start; }
 }
+
+.extra-lessons { display: grid; gap: 1.25rem; margin-top: 1.25rem; }
+.lesson-prompt { overflow-x: auto; padding: 1rem; border-radius: 12px; background: #f2eef7; color: var(--ink); white-space: pre-wrap; font: .95rem/1.6 ui-monospace, SFMono-Regular, Consolas, monospace; }
+.course-editor { margin-top: 1.5rem; }
+.lesson-step-editor { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.admin-course-actions { display: grid; justify-items: start; gap: .2rem; }
+.admin-check { display: flex; align-items: center; gap: .5rem; }
+.admin-check input { width: auto; }
+.admin-panel select { width: 100%; padding: .7rem .8rem; border: 1px solid #d8cbd9; border-radius: 10px; background: #fffefa; color: var(--ink); font: inherit; }
