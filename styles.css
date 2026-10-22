@@ -195,3 +195,66 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
 @media (prefers-reduced-motion: no-preference) {
   .phase-card, .button { transition-duration: .22s; }
 }
+
+
+/* Small original doodles and calm motion for the learning path */
+.hero-note {
+  isolation: isolate;
+}
+.hero-note::before,
+.hero-note::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+}
+.hero-note::before {
+  width: 8.5rem;
+  aspect-ratio: 1;
+  top: -2.5rem;
+  right: -1.5rem;
+  border-radius: 50%;
+  background: rgba(255, 249, 214, .72);
+}
+.hero-note::after {
+  width: 10rem;
+  height: 4rem;
+  top: 1.25rem;
+  right: -1rem;
+  border: 1px solid rgba(126, 91, 133, .24);
+  border-radius: 50%;
+  transform: rotate(-28deg);
+}
+.hero-note p,
+.hero-note .note-spark,
+.hero-note .note-doodle {
+  position: relative;
+  z-index: 1;
+}
+.note-spark {
+  animation: sparkle-drift 5s ease-in-out infinite;
+}
+.note-doodle {
+  animation: doodle-float 4.5s ease-in-out infinite;
+}
+.phase-icon {
+  transition: transform .25s ease, background-color .25s ease;
+}
+.phase-card:hover .phase-icon {
+  transform: translateY(-3px) rotate(-8deg);
+  background: rgba(255, 255, 255, .78);
+}
+@keyframes sparkle-drift {
+  0%, 100% { transform: rotate(0) scale(1); }
+  50% { transform: rotate(12deg) scale(1.08); }
+}
+@keyframes doodle-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .note-spark,
+  .note-doodle {
+    animation: none;
+  }
+}
