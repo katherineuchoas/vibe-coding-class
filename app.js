@@ -26,14 +26,44 @@ function setConnectionStatus(message, state = "") {
 }
 
 function renderPhases(rows) {
-  rows.forEach((phase) => {
-    const card = document.querySelector(`[data-phase-id="${Number(phase.id)}"]`);
-    if (!card) return;
-    const title = card.querySelector("h3");
-    const description = card.querySelector("p");
-    if (title) title.textContent = phase.titulo;
-    if (description) description.textContent = phase.descricao;
+  const grid = document.querySelector(".phase-grid");
+  const colors = ["peach", "blue", "lilac", "green"];
+  const icons = ["☀", "▤", "✎", "⌑"];
+  const existingCards = new Map(
+    [...grid.querySelectorAll(".phase-card")].map((card) => [card.dataset.phaseId, card])
+  );
+
+  const cards = rows.map((phase, index) => {
+    const id = String(Number(phase.id));
+    let card = existingCards.get(id);
+
+    if (!card) {
+      card = document.createElement("a");
+      card.className = `phase-card phase-${colors[index % colors.length]}`;
+      card.href = "#aulas";
+      card.dataset.phaseId = id;
+
+      const number = document.createElement("span");
+      number.className = "phase-number";
+      const icon = document.createElement("span");
+      icon.className = "phase-icon";
+      icon.setAttribute("aria-hidden", "true");
+      icon.textContent = icons[index % icons.length];
+      const title = document.createElement("h3");
+      const description = document.createElement("p");
+      const meta = document.createElement("span");
+      meta.className = "phase-meta";
+      meta.textContent = `Etapa ${id.padStart(2, "0")}`;
+      card.append(number, icon, title, description, meta);
+    }
+
+    card.querySelector(".phase-number").textContent = id.padStart(2, "0");
+    card.querySelector("h3").textContent = phase.titulo;
+    card.querySelector("p").textContent = phase.descricao;
+    return card;
   });
+
+  grid.replaceChildren(...cards);
 }
 
 async function loadPhases() {
