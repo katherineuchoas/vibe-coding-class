@@ -370,3 +370,5 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
 .admin-check { display: flex; align-items: center; gap: .5rem; }
 .admin-check input { width: auto; }
 .admin-panel select { width: 100%; padding: .7rem .8rem; border: 1px solid #d8cbd9; border-radius: 10px; background: #fffefa; color: var(--ink); font: inherit; }
+
+.lesson-step-content { white-space: pre-line; }
