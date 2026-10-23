@@ -7,9 +7,9 @@
   <meta name="description" content="Aprenda vibe coding com passos simples, exercícios guiados e prompts prontos.">
   <title>Vibe em Etapas — aprenda criando</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261023-hero-start">
+  <link rel="stylesheet" href="styles.css?v=20261023-bottom-toast">
   <script src="supabase-config.js"></script>
-  <script src="app.js?v=20261023-disclosure-button" defer></script>
+  <script src="app.js?v=20261023-bottom-toast" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -45,7 +45,6 @@
         <div><p class="eyebrow">O CAMINHO</p><h2>Quatro etapas, uma casa</h2></div>
         <p>Cada passo constrói uma parte. Faça na ordem e avance quando a etapa estiver funcionando.</p>
       </div>
-      <p class="connection-status" id="connection-status" role="status" aria-live="polite">As fases aparecem como conteúdo de exemplo enquanto o projeto Supabase não está configurado.</p>
       <div class="phase-grid">
         <a class="phase-card phase-peach" data-phase-id="1" href="#aula-1"><span class="phase-number">01</span><span class="phase-icon" aria-hidden="true">☀</span><h3>A Fachada</h3><p>A tela que a pessoa vê e usa.</p><span class="phase-meta">Passo 1 · Interface</span></a>
         <a class="phase-card phase-blue" data-phase-id="2" href="#aula-2"><span class="phase-number">02</span><span class="phase-icon" aria-hidden="true">▤</span><h3>O Caderno</h3><p>Onde os dados ficam guardados.</p><span class="phase-meta">Passo 2 · Banco de dados</span></a>
@@ -247,6 +246,10 @@ Quando terminar, diga como posso testar cada caminho.</pre>
     <a href="admin.html">Área de edição</a>
     <a href="#inicio">Voltar ao topo</a>
   </footer>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden>
+    <span class="toast-icon" aria-hidden="true"></span>
+    <span class="toast-text"></span>
+    <button class="toast-close" type="button" aria-label="Fechar aviso">×</button>
+  </div>
 </body>
 </html>
