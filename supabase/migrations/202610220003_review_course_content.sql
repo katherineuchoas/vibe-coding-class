@@ -330,3 +330,14 @@ $lesson$1. Autenticação confirma quem pode entrar.
 from public.aulas a
 where a.slug = 'aula-4'
   and not exists (select 1 from public.aula_passos p where p.aula_id = a.id and p.ordem = 17);
+
+-- Replace a leftover placeholder heading with a clear action.
+update public.aula_passos p
+set titulo = 'Mova os dados para o banco',
+    conteudo = '• Veja no plano quais informações precisam ficar guardadas.
+• Configure o Supabase.
+• Crie as tabelas e coloque nelas os dados reais.
+• Troque a leitura e a gravação do app para usar o banco.
+• Feche e abra de novo para conferir se os dados continuam lá.'
+from public.aulas a
+where p.aula_id = a.id and a.slug = 'aula-2' and p.ordem = 4;
