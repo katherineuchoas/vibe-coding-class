@@ -410,3 +410,93 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
 .admin-panel select { width: 100%; padding: .7rem .8rem; border: 1px solid #d8cbd9; border-radius: 10px; background: #fffefa; color: var(--ink); font: inherit; }
 
 .lesson-step-content { white-space: pre-line; }
+
+
+/* Clearer, calmer course administration */
+.admin-page .admin-main { padding-block: 3.25rem 4rem; }
+.admin-page .admin-page-heading { max-width: 54rem; margin-bottom: 2rem; }
+.admin-page .admin-page-heading h1 { max-width: 16ch; margin-bottom: .65rem; font-size: clamp(2.5rem, 5vw, 4rem); }
+.admin-page .admin-page-heading .hero-lede { margin-bottom: 0; }
+.admin-page .admin-message:empty { display: none; }
+.admin-page .admin-message:not(:empty) {
+  margin: 0 0 1rem;
+  padding: .85rem 1rem;
+  border: 1px solid #e5d7c4;
+  border-radius: 12px;
+  background: #fff5e7;
+}
+.admin-page .admin-message[data-state="error"] { border-color: #e6b9b8; background: #fff0ef; color: #7d3038; }
+.admin-page .admin-message[data-state="success"] { border-color: #bed2b8; background: #eff7ec; color: #345b3c; }
+.admin-page .admin-auth-panel { max-width: 38rem; margin: 0 auto; padding: clamp(1.25rem, 4vw, 2rem); }
+.admin-page .admin-panel-kicker { margin: 0 0 .4rem; color: #72517d; font-size: .72rem; font-weight: 800; letter-spacing: .12em; }
+.admin-page .admin-auth-panel h2 { margin-bottom: .45rem; font-size: 1.7rem; }
+.admin-page .admin-panel-intro { max-width: 32rem; margin-bottom: 1.2rem; color: var(--muted); }
+.admin-page .admin-panel label { margin-top: .65rem; }
+.admin-page .admin-panel input:not([type="checkbox"]),
+.admin-page .admin-panel textarea,
+.admin-page .admin-panel select {
+  min-height: 2.9rem;
+  border-color: #b9aebe;
+}
+.admin-page .admin-panel textarea { min-height: auto; }
+.admin-page .admin-panel input:focus-visible,
+.admin-page .admin-panel textarea:focus-visible,
+.admin-page .admin-panel select:focus-visible {
+  outline: 3px solid #735e85;
+  outline-offset: 2px;
+}
+.admin-page .button { min-height: 2.8rem; }
+.admin-page .admin-text-button { min-height: 2.75rem; padding: .5rem .2rem; }
+.admin-page .admin-workspace-heading {
+  padding: 1.25rem 1.4rem;
+  border: 1px solid #e5d8e4;
+  border-radius: 18px;
+  background: linear-gradient(110deg, #fff1e9, #f2edf8 58%, #edf5ee);
+}
+.admin-page .admin-workspace-heading h2 { font-size: 1.65rem; }
+.admin-page .admin-shortcuts { display: flex; flex-wrap: wrap; gap: .65rem; margin: 0 0 1.3rem; }
+.admin-page .admin-shortcuts a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: .5rem .9rem;
+  border: 1px solid #d8cbd9;
+  border-radius: 999px;
+  background: #fffefa;
+  color: var(--plum);
+  font-weight: 700;
+  text-decoration: none;
+}
+.admin-page .admin-shortcuts a:hover { background: #f3edf8; }
+.admin-page .admin-columns { grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr); gap: 1.1rem; }
+.admin-page .admin-content-panel { border-top: 4px solid #d9c6e4; }
+.admin-page #phase-management { border-top-color: #e4b09a; }
+.admin-page .admin-content-panel h3 { font-size: 1.35rem; }
+.admin-page .admin-phase-item { min-height: 4rem; align-items: center; border: 1px solid rgba(91,70,102,.08); }
+.admin-page .admin-phase-item .admin-text-button { padding-inline: .65rem; }
+.admin-page .course-editor { margin-top: 1.3rem; border-top: 4px solid #9fc5c5; }
+.admin-page .course-editor-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem 2rem;
+  margin-bottom: 1.25rem;
+}
+.admin-page .course-editor-heading h2 { margin: 0; font-size: 1.8rem; }
+.admin-page .course-editor-heading > p { max-width: 36rem; margin: 0; color: var(--muted); }
+.admin-page .lesson-step-editor { padding: 1.2rem; border: 1px solid #e2d8eb; border-radius: 16px; background: #faf7fc; }
+.admin-page .lesson-step-editor h3 { margin-bottom: .8rem; }
+.admin-page .button-secondary { min-height: 2.8rem; }
+@media (max-width: 700px) {
+  .admin-page .admin-main { padding-block: 2rem 3rem; }
+  .admin-page .admin-page-heading { margin-bottom: 1.4rem; }
+  .admin-page .admin-page-heading h1 { font-size: clamp(2.3rem, 11vw, 3.2rem); }
+  .admin-page .admin-workspace-heading { padding: 1rem; }
+  .admin-page .course-editor-heading { align-items: flex-start; flex-direction: column; }
+  .admin-page .admin-shortcuts { display: grid; grid-template-columns: 1fr 1fr; }
+  .admin-page .admin-shortcuts a { justify-content: center; text-align: center; }
+}
+@media (max-width: 420px) {
+  .admin-page .admin-shortcuts { grid-template-columns: 1fr; }
+  .admin-page .admin-workspace-heading { flex-direction: column; }
+}
