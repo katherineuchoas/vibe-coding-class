@@ -1017,3 +1017,43 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
 }
 
 .admin-page .admin-message { display: none; }
+
+
+/* Clear actions for managing and safely removing course content */
+.admin-item-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem;
+}
+.admin-phase-item > .admin-item-actions { flex: 0 0 auto; }
+.admin-delete-button {
+  min-height: 2.45rem;
+  padding: .5rem .8rem;
+  border: 1px solid #e4c2c3;
+  border-radius: 999px;
+  background: #fff7f6;
+  color: #81464c;
+  font: inherit;
+  font-size: .86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color .18s ease, border-color .18s ease, transform .18s ease;
+}
+.admin-delete-button:hover:not(:disabled) { border-color: #d49a9d; background: #ffefed; transform: translateY(-1px); }
+.admin-delete-button:focus-visible { outline: 3px solid #b97880; outline-offset: 2px; }
+.admin-delete-button:disabled { opacity: .55; cursor: wait; }
+.admin-page #lesson-step-list .admin-item-actions { margin-top: .5rem; }
+.public-empty-state {
+  margin: 1.25rem 0;
+  padding: 1.2rem;
+  border: 1px dashed #d8c9df;
+  border-radius: 16px;
+  background: #f8f3fa;
+  color: var(--muted);
+  text-align: center;
+}
+@media (max-width: 700px) {
+  .admin-phase-item > .admin-item-actions { flex-wrap: wrap; justify-content: flex-end; }
+  .admin-page .admin-course-actions { justify-items: start; }
+}
