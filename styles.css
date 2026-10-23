@@ -1253,6 +1253,7 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
 
 /* Keep the home close to its original look; make dynamic prompts feel like notes. */
 .admin-page .admin-visibility-toggle {
+  align-self: flex-start;
   justify-content: flex-start;
   min-height: 0;
   padding: 0;
