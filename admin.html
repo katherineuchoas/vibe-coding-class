@@ -20,14 +20,17 @@
       <span>vibe <strong>em etapas</strong></span>
     </a>
     <a class="top-link" id="admin-return-link" href="index.html">Voltar às aulas</a>
-    <span class="top-link admin-header-email" id="admin-header-email" hidden></span>
+    <div class="admin-session" id="admin-session" hidden>
+      <span class="admin-header-email" id="admin-header-email"></span>
+      <button class="button button-dark" id="sign-out" type="button">Sair</button>
+    </div>
   </header>
 
   <main class="admin-main section-wrap" id="admin-main">
     <header class="admin-page-heading">
       <p class="eyebrow">ÁREA DE EDIÇÃO</p>
-      <h1>Organize suas aulas <span>com calma.</span></h1>
-      <p class="hero-lede">Entre para editar as etapas do caminho e cada parte das aulas.</p>
+      <h1>Conteúdo do curso</h1>
+      <p class="hero-lede">Escolha o que deseja organizar. As aulas e suas partes ficam em uma área; as etapas do caminho, em outra.</p>
     </header>
 
     <p class="admin-message" id="admin-message" role="status" aria-live="polite"></p>
@@ -65,15 +68,14 @@
     <section class="admin-workspace" id="editor-panel" aria-labelledby="editor-title" hidden>
       <div class="admin-workspace-heading">
         <div>
-          <h2 id="editor-title">Painel de conteúdo</h2>
-          <p>Escolha uma etapa ou uma aula para editar.</p>
+          <h2 id="editor-title">Seu painel</h2>
+          <p id="editor-description">Edite o conteúdo sem misturar as áreas.</p>
         </div>
-        <button class="button button-dark" id="sign-out" type="button">Sair</button>
       </div>
-      <nav class="admin-shortcuts" aria-label="Atalhos da área de edição">
-        <a href="#course-management">Aulas e passos</a>
-        <a href="#phase-management">Etapas do caminho</a>
-      </nav>
+      <div class="admin-mode-switch" role="group" aria-label="Escolha o que deseja editar">
+        <button type="button" id="mode-lessons" aria-pressed="true">Editar aulas</button>
+        <button type="button" id="mode-phases" aria-pressed="false">Editar etapas</button>
+      </div>
 
       <section class="admin-panel course-editor" id="course-management" aria-labelledby="course-editor-title">
         <div class="course-editor-heading">
@@ -147,6 +149,7 @@
         </section>
       </section>
 
+      <section class="admin-phase-workspace" id="phase-workspace" aria-label="Editar etapas do caminho" hidden>
       <div class="admin-columns">
         <section class="admin-panel admin-content-panel" id="phase-management" aria-labelledby="phase-list-title">
           <h3 id="phase-list-title">Etapas existentes</h3>
@@ -168,6 +171,7 @@
           <p class="small-note">A página pública continua aberta para leitura. Só uma conta autorizada pode salvar mudanças.</p>
         </section>
       </div>
+      </section>
 
 
     </section>
