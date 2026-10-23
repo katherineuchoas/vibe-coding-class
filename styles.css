@@ -853,3 +853,13 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
   .admin-page .admin-mode-switch button { padding-inline: .55rem; font-size: .9rem; }
   .admin-page .admin-header-email { max-width: 38vw; }
 }
+
+@media (max-width: 600px) {
+  .admin-page .admin-course-item { grid-template-columns: minmax(0, 1fr); }
+  .admin-course-actions {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+}
