@@ -19,7 +19,8 @@
       <span class="brand-mark" aria-hidden="true">✳</span>
       <span>vibe <strong>em etapas</strong></span>
     </a>
-    <a class="top-link" href="index.html">Voltar às aulas</a>
+    <a class="top-link" id="admin-return-link" href="index.html">Voltar às aulas</a>
+    <span class="top-link admin-header-email" id="admin-header-email" hidden></span>
   </header>
 
   <main class="admin-main section-wrap" id="admin-main">
@@ -64,8 +65,8 @@
     <section class="admin-workspace" id="editor-panel" aria-labelledby="editor-title" hidden>
       <div class="admin-workspace-heading">
         <div>
-          <h2 id="editor-title">Etapas do curso</h2>
-          <p>Conectada como <strong id="current-user"></strong></p>
+          <h2 id="editor-title">Painel de conteúdo</h2>
+          <p>Escolha uma etapa ou uma aula para editar.</p>
         </div>
         <button class="button button-dark" id="sign-out" type="button">Sair</button>
       </div>
@@ -98,48 +99,74 @@
 
       <section class="admin-panel course-editor" id="course-management" aria-labelledby="course-editor-title">
         <div class="course-editor-heading">
-          <div><p class="admin-panel-kicker">CONTEÚDO DO CURSO</p><h2 id="course-editor-title">Aulas e passos</h2></div>
-          <p>Escolha uma aula para editar. Depois, organize cada explicação, atividade, dica ou prompt em passos separados.</p>
+          <div><p class="admin-panel-kicker">CONTEÚDO DO CURSO</p><h2 id="course-editor-title">Editar uma aula</h2></div>
+          <p>Primeiro escolha uma aula. Depois você verá o que já existe e poderá editar cada parte separadamente.</p>
         </div>
-        <div class="admin-columns">
-          <div>
-            <div id="course-lesson-list" class="admin-phase-list"></div>
+
+        <div class="course-browser" id="course-browser">
+          <div class="course-browser-heading">
+            <div><h3>Escolha uma aula</h3><p>Abra uma aula para editar seu título, resumo e conteúdo.</p></div>
             <button class="button button-secondary" id="new-course-lesson" type="button">Criar aula</button>
           </div>
-          <form id="course-lesson-form">
-            <input id="course-lesson-id" type="hidden">
-            <label for="course-lesson-title">Nome da aula</label>
-            <input id="course-lesson-title" maxlength="120" required>
-            <label for="course-lesson-summary">Resumo simples</label>
-            <textarea id="course-lesson-summary" rows="3" maxlength="500"></textarea>
-            <label for="course-lesson-order">Ordem da aula</label>
-            <input id="course-lesson-order" type="number" min="1" value="1" required>
-            <label class="admin-check"><input id="course-lesson-published" type="checkbox" checked> Mostrar na página pública</label>
-            <button class="button button-primary" type="submit">Salvar aula</button>
-          </form>
+          <div id="course-lesson-list" class="admin-phase-list" aria-live="polite"></div>
         </div>
-        <div class="lesson-step-editor" id="lesson-step-editor" hidden>
-          <h3>Passos desta aula</h3>
-          <div id="lesson-step-list" class="admin-phase-list"></div>
-          <form id="lesson-step-form">
-            <input id="lesson-step-id" type="hidden">
-            <label for="lesson-step-type">Tipo de conteúdo</label>
-            <select id="lesson-step-type">
-              <option value="explicacao">Explicação</option>
-              <option value="atividade">Atividade</option>
-              <option value="prompt">Prompt para copiar</option>
-              <option value="dica">Dica</option>
-            </select>
-            <label for="lesson-step-title">Título do passo</label>
-            <input id="lesson-step-title" maxlength="120" required>
-            <label for="lesson-step-content">Texto do passo</label>
-            <textarea id="lesson-step-content" rows="6" maxlength="8000" required></textarea>
-            <label for="lesson-step-order">Ordem do passo</label>
-            <input id="lesson-step-order" type="number" min="1" value="1" required>
-            <button class="button button-primary" type="submit">Salvar passo</button>
-            <button class="admin-text-button" id="new-lesson-step" type="button">Novo passo</button>
-          </form>
-        </div>
+
+        <section class="course-detail-view" id="course-detail-view" aria-labelledby="course-detail-title" hidden>
+          <div class="course-detail-heading">
+            <div>
+              <p class="admin-panel-kicker">AULA SELECIONADA</p>
+              <h3 id="course-detail-title">Editar aula</h3>
+              <p id="course-detail-summary">As informações atuais aparecem nos campos abaixo.</p>
+            </div>
+            <button class="button button-secondary" id="back-to-course-list" type="button">Voltar à lista</button>
+          </div>
+
+          <div class="course-detail-grid">
+            <section class="admin-panel course-data-panel" aria-labelledby="course-data-title">
+              <p class="admin-panel-kicker">1 · DADOS DA AULA</p>
+              <h4 id="course-data-title">Título e resumo</h4>
+              <form id="course-lesson-form">
+                <input id="course-lesson-id" type="hidden">
+                <label for="course-lesson-title">Título da aula</label>
+                <input id="course-lesson-title" maxlength="120" required>
+                <label for="course-lesson-summary">Subtítulo ou resumo</label>
+                <textarea id="course-lesson-summary" rows="3" maxlength="500"></textarea>
+                <label for="course-lesson-order">Ordem da aula</label>
+                <input id="course-lesson-order" type="number" min="1" value="1" required>
+                <label class="admin-check"><input id="course-lesson-published" type="checkbox" checked> Mostrar na página pública</label>
+                <button class="button button-primary" type="submit">Salvar dados da aula</button>
+              </form>
+            </section>
+
+            <section class="lesson-step-editor course-steps-panel" id="lesson-step-editor" aria-labelledby="lesson-steps-title" hidden>
+              <p class="admin-panel-kicker">2 · CONTEÚDO DA AULA</p>
+              <h4 id="lesson-steps-title">Explicações, atividades e prompts</h4>
+              <p class="small-note">Cada bloco é um passo independente. Edite o título e o texto de cada um, ou crie um novo.</p>
+              <div id="lesson-step-list" class="admin-phase-list" aria-live="polite"></div>
+              <form id="lesson-step-form">
+                <input id="lesson-step-id" type="hidden">
+                <h5 id="lesson-step-form-title">Novo passo</h5>
+                <label for="lesson-step-type">Tipo de conteúdo</label>
+                <select id="lesson-step-type">
+                  <option value="explicacao">Explicação</option>
+                  <option value="atividade">Atividade</option>
+                  <option value="prompt">Prompt para copiar</option>
+                  <option value="dica">Dica</option>
+                </select>
+                <label for="lesson-step-title">Título do passo</label>
+                <input id="lesson-step-title" maxlength="120" required>
+                <label for="lesson-step-content">Texto do passo</label>
+                <textarea id="lesson-step-content" rows="6" maxlength="8000" required></textarea>
+                <label for="lesson-step-order">Ordem do passo</label>
+                <input id="lesson-step-order" type="number" min="1" value="1" required>
+                <div class="course-form-actions">
+                  <button class="button button-primary" type="submit">Salvar passo</button>
+                  <button class="button button-secondary" id="new-lesson-step" type="button">Criar outro passo</button>
+                </div>
+              </form>
+            </section>
+          </div>
+        </section>
       </section>
     </section>
   </main>
