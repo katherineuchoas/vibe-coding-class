@@ -8,6 +8,7 @@ const editorPanel = document.querySelector("#editor-panel");
 const loginForm = document.querySelector("#login-form");
 const passwordForm = document.querySelector("#password-form");
 const phaseForm = document.querySelector("#phase-form");
+const phaseFormPanel = document.querySelector("#phase-form-panel");
 const phaseList = document.querySelector("#phase-list");
 const phaseId = document.querySelector("#phase-id");
 const phaseTitle = document.querySelector("#phase-title");
@@ -77,7 +78,9 @@ function setAdminMode(mode) {
 function startNewPhase() {
   phaseForm.reset();
   phaseId.value = "";
-  cancelEdit.hidden = true;
+  phaseFormPanel.hidden = false;
+  cancelEdit.hidden = false;
+  cancelEdit.textContent = "Cancelar";
   document.querySelector("#phase-form-title").textContent = "Adicionar etapa";
   phaseTitle.focus();
 }
@@ -86,7 +89,9 @@ function editPhase(phase) {
   phaseId.value = String(phase.id);
   phaseTitle.value = phase.titulo;
   phaseDescription.value = phase.descricao;
+  phaseFormPanel.hidden = false;
   cancelEdit.hidden = false;
+  cancelEdit.textContent = "Cancelar edição";
   document.querySelector("#phase-form-title").textContent = "Editar etapa";
   phaseTitle.focus();
 }
@@ -110,9 +115,14 @@ function renderPhaseList() {
     const description = document.createElement("p");
     description.textContent = phase.descricao;
     const button = document.createElement("button");
-    button.className = "admin-text-button";
+    button.className = "admin-course-edit";
     button.type = "button";
-    button.textContent = "Editar";
+    button.setAttribute("aria-label", `Editar a etapa: ${phase.titulo}`);
+    button.append(document.createTextNode("Editar etapa"));
+    const arrow = document.createElement("span");
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "→";
+    button.append(arrow);
     button.addEventListener("click", () => editPhase(phase));
     text.append(title, description);
     item.append(text, button);
@@ -528,7 +538,13 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
   modeLessons.addEventListener("click", () => setAdminMode("lessons"));
   modePhases.addEventListener("click", () => setAdminMode("phases"));
   document.querySelector("#new-phase").addEventListener("click", startNewPhase);
-  document.querySelector("#cancel-edit").addEventListener("click", startNewPhase);
+  document.querySelector("#cancel-edit").addEventListener("click", () => {
+    phaseForm.reset();
+    phaseId.value = "";
+    cancelEdit.hidden = true;
+    cancelEdit.textContent = "Cancelar edição";
+    phaseFormPanel.hidden = true;
+  });
   document.querySelector("#sign-out").addEventListener("click", signOut);
   document.querySelector("#denied-sign-out").addEventListener("click", signOut);
 
@@ -564,6 +580,7 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
     phaseForm.reset();
     phaseId.value = "";
     cancelEdit.hidden = true;
+    phaseFormPanel.hidden = true;
     document.querySelector("#phase-form-title").textContent = "Adicionar etapa";
     await loadPhases();
     showMessage("Etapa salva. A página pública mostrará a mudança ao atualizar.", "success");
