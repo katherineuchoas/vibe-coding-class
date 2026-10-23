@@ -408,7 +408,7 @@ set ordem = 7,
 
 Ainda não coloque login nesta fase. Se uma mudança quebrar outra parte, volte aos passos de investigação de bugs.'
 from public.aulas a
-where p.aula_id = a.id and a.slug = 'aula-3' and p.ordem = 5;
+where p.aula_id = a.id and a.slug = 'aula-3' and p.ordem = 5 and p.titulo = 'Expanda ou investigue';
 
 insert into public.aula_passos (aula_id, tipo, titulo, conteudo, ordem)
 select a.id, 'prompt', 'Prompt para pedir uma função nova',
