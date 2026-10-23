@@ -7,10 +7,10 @@
   <meta name="description" content="Área privada de edição das etapas do curso Vibe em Etapas.">
   <title>Área de edição — Vibe em Etapas</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261023-bottom-toast">
+  <link rel="stylesheet" href="styles.css?v=20261023-course-deletion">
   <script src="supabase-config.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="admin.js?v=20261023-bottom-toast"></script>
+  <script defer src="admin.js?v=20261023-course-deletion"></script>
 </head>
 <body class="admin-page">
   <a class="skip-link" href="#admin-main">Pular para o conteúdo</a>
@@ -120,7 +120,7 @@
             <section class="lesson-step-editor course-steps-panel" id="lesson-step-editor" aria-labelledby="lesson-steps-title" hidden>
               <p class="admin-panel-kicker">2 · CONTEÚDO DO PASSO</p>
               <h4 id="lesson-steps-title">Explicações, atividades e prompts</h4>
-              <p class="small-note">Cada bloco é um passo independente. Edite o título e o texto de cada um, ou crie um novo.</p>
+              <p class="small-note">Cada conteúdo pode ser editado ou excluído. Ao excluir um passo inteiro, seus conteúdos também serão removidos.</p>
               <div id="lesson-step-list" class="admin-phase-list" aria-live="polite"></div>
               <form id="lesson-step-form">
                 <input id="lesson-step-id" type="hidden">
