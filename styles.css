@@ -495,7 +495,7 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
 }
 .admin-course-copy { min-width: 0; }
 .admin-course-copy strong { display: block; color: var(--ink); }
-.admin-course-copy p { max-width: 64ch; line-height: 1.55; }
+.admin-course-copy p { width: 100%; max-width: none; line-height: 1.55; }
 .admin-course-actions {
   display: flex;
   flex-direction: column;
@@ -1056,4 +1056,72 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
 @media (max-width: 700px) {
   .admin-phase-item > .admin-item-actions { flex-wrap: wrap; justify-content: flex-end; }
   .admin-page .admin-course-actions { justify-items: start; }
+}
+
+
+/* Full-width page bands and mobile-friendly navigation */
+.topbar,
+.footer {
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+.topbar {
+  height: auto;
+  min-height: 4.5rem;
+}
+.footer {
+  flex-wrap: wrap;
+}
+.admin-course-copy p {
+  width: 100%;
+  max-width: none;
+}
+@media (max-width: 560px) {
+  .topbar {
+    min-height: 3.8rem;
+    height: auto;
+    flex-wrap: wrap;
+    gap: .5rem 1rem;
+    padding: .65rem 1rem;
+  }
+  .topbar .brand,
+  .topbar .top-link {
+    min-width: 0;
+  }
+  .admin-page .topbar {
+    align-items: center;
+  }
+  .admin-page .admin-session {
+    display: flex;
+    flex: 1 0 100%;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+    gap: .65rem;
+  }
+  .admin-page .admin-header-email {
+    flex: 1 1 auto;
+    min-width: 0;
+    max-width: none;
+  }
+  .admin-page .admin-session .button {
+    flex: 0 0 auto;
+  }
+  .footer {
+    width: 100%;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: .65rem;
+    padding: 1.2rem 1rem;
+  }
+  .admin-page .admin-course-actions {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    gap: .5rem;
+  }
 }
