@@ -79,7 +79,8 @@ function startNewPhase() {
   phaseForm.reset();
   phaseId.value = "";
   phaseFormPanel.hidden = false;
-  cancelEdit.hidden = true;
+  cancelEdit.hidden = false;
+  cancelEdit.textContent = "Cancelar";
   document.querySelector("#phase-form-title").textContent = "Adicionar etapa";
   phaseTitle.focus();
 }
@@ -90,6 +91,7 @@ function editPhase(phase) {
   phaseDescription.value = phase.descricao;
   phaseFormPanel.hidden = false;
   cancelEdit.hidden = false;
+  cancelEdit.textContent = "Cancelar edição";
   document.querySelector("#phase-form-title").textContent = "Editar etapa";
   phaseTitle.focus();
 }
@@ -540,6 +542,7 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
     phaseForm.reset();
     phaseId.value = "";
     cancelEdit.hidden = true;
+    cancelEdit.textContent = "Cancelar edição";
     phaseFormPanel.hidden = true;
   });
   document.querySelector("#sign-out").addEventListener("click", signOut);
