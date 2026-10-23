@@ -1171,3 +1171,27 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
   .admin-panel, .admin-page .course-editor { padding: 1.15rem; }
   .admin-columns, .course-detail-grid { gap: 1rem; }
 }
+
+
+/* Add more breathing room to the admin course editor. */
+.admin-page .admin-mode-switch { margin-bottom: 2.25rem; }
+.admin-page .course-editor { padding: 2.2rem; }
+.admin-page .course-editor-heading { margin-bottom: 2.25rem; }
+.admin-page .course-browser,
+.admin-page .course-detail-view { padding-top: 2rem; }
+.admin-page .course-browser-heading,
+.admin-page .course-detail-heading { margin-bottom: 2rem; }
+.admin-page #course-lesson-list { gap: 1.5rem; }
+.admin-page #course-lesson-list .admin-phase-item {
+  gap: 2rem;
+  padding: 1.5rem 1.7rem;
+}
+.admin-page .admin-course-actions { gap: 1rem; }
+
+@media (max-width: 700px) {
+  .admin-page .admin-mode-switch { margin-bottom: 1.5rem; }
+  .admin-page .course-editor { padding: 1.35rem; }
+  .admin-page .course-editor-heading { margin-bottom: 1.5rem; }
+  .admin-page #course-lesson-list { gap: 1.2rem; }
+  .admin-page #course-lesson-list .admin-phase-item { padding: 1.25rem; }
+}
