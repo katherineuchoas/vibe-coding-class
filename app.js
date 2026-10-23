@@ -1,6 +1,6 @@
 function updateLessonDisclosureLabel(details) {
   const hint = details.querySelector(".summary-hint");
-  if (hint) hint.textContent = "Abrir passo";
+  if (hint) hint.textContent = details.open ? "Fechar passo" : "Abrir passo";
 }
 
 function bindLessonDisclosures() {
