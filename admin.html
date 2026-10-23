@@ -7,10 +7,10 @@
   <meta name="description" content="Área privada de edição das etapas do curso Vibe em Etapas.">
   <title>Área de edição — Vibe em Etapas</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261023-admin-controls">
+  <link rel="stylesheet" href="styles.css?v=20261023-phase-editor">
   <script src="supabase-config.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="admin.js?v=20261023-admin-controls"></script>
+  <script defer src="admin.js?v=20261023-phase-editor"></script>
 </head>
 <body class="admin-page">
   <a class="skip-link" href="#admin-main">Pular para o conteúdo</a>
@@ -157,7 +157,7 @@
           <button class="button button-secondary" id="new-phase" type="button">Adicionar etapa</button>
         </section>
 
-        <section class="admin-panel admin-content-panel" aria-labelledby="phase-form-title">
+        <section class="admin-panel admin-content-panel" id="phase-form-panel" aria-labelledby="phase-form-title" hidden>
           <h3 id="phase-form-title">Editar etapa</h3>
           <form id="phase-form">
             <input id="phase-id" name="id" type="hidden">
