@@ -1280,3 +1280,16 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
   }
   .admin-page .admin-course-edit { grid-column: 1 / -1; }
 }
+
+
+/* The visibility label itself must not render as a white pill. */
+.admin-page .admin-course-actions .admin-visibility-toggle {
+  display: inline-flex;
+  width: max-content;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: none;
+  box-shadow: none;
+}
