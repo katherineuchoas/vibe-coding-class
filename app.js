@@ -231,19 +231,34 @@ async function loadCourseLessons() {
       order: "ordem.asc"
     });
     const response = await fetch(lessonsUrl, { headers });
-    if (!response.ok) return;
+    if (!response.ok) {
+      showMessage("Não consegui carregar os passos publicados. Confira as permissões do Supabase.", "error");
+      return;
+    }
+
     const rows = await response.json();
-    const extraContainer = document.querySelector("#extra-lessons");
-    extraContainer.replaceChildren();
-    rows.forEach((lesson, index) => {
-      const card = createCourseLesson(lesson, index);
-      const oldCard = lesson.slug ? document.getElementById(lesson.slug) : null;
-      if (oldCard?.classList.contains("lesson")) oldCard.replaceWith(card);
-      else extraContainer.append(card);
-    });
+    if (!Array.isArray(rows)) {
+      showMessage("A lista de passos veio em um formato inesperado.", "error");
+      return;
+    }
+
+    const container = document.querySelector("#extra-lessons");
+    const cards = rows.map(createCourseLesson);
+    document.querySelectorAll(".learning > article.lesson").forEach((lesson) => lesson.remove());
+
+    if (cards.length) {
+      container.replaceChildren(...cards);
+    } else {
+      const empty = document.createElement("p");
+      empty.className = "public-empty-state";
+      empty.textContent = "Ainda não há passos publicados. Volte em breve!";
+      container.replaceChildren(empty);
+      showMessage("Não há passos publicados no momento.", "info", 6000);
+    }
+
     bindLessonDisclosures();
   } catch {
-    // Se o Supabase estiver indisponível, o site mantém os passos locais.
+    showMessage("Não consegui buscar os passos. A página manteve o conteúdo de exemplo.", "error");
   }
 }
 

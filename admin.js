@@ -139,6 +139,8 @@ function renderPhaseList() {
     title.textContent = phase.titulo;
     const description = document.createElement("p");
     description.textContent = phase.descricao;
+    const actions = document.createElement("div");
+    actions.className = "admin-item-actions";
     const button = document.createElement("button");
     button.className = "admin-course-edit";
     button.type = "button";
@@ -149,10 +151,39 @@ function renderPhaseList() {
     arrow.textContent = "→";
     button.append(arrow);
     button.addEventListener("click", () => editPhase(phase));
+
+    const remove = document.createElement("button");
+    remove.className = "admin-delete-button";
+    remove.type = "button";
+    remove.textContent = "Excluir";
+    remove.setAttribute("aria-label", `Excluir a etapa: ${phase.titulo}`);
+    remove.addEventListener("click", () => deletePhase(phase, remove));
+
+    actions.append(button, remove);
     text.append(title, description);
-    item.append(text, button);
+    item.append(text, actions);
     phaseList.append(item);
   });
+}
+
+async function deletePhase(phase, button) {
+  const accepted = window.confirm(`Excluir a etapa “${phase.titulo}”? Essa ação não pode ser desfeita.`);
+  if (!accepted) return;
+  button.disabled = true;
+  const { error } = await client.from("fases").delete().eq("id", phase.id);
+  if (error) {
+    button.disabled = false;
+    showMessage("Não consegui excluir a etapa. Confira a permissão de exclusão no Supabase.", "error");
+    return;
+  }
+  if (phaseId.value === String(phase.id)) {
+    phaseForm.reset();
+    phaseId.value = "";
+    phaseFormPanel.hidden = true;
+    cancelEdit.hidden = true;
+  }
+  showMessage("Etapa excluída.", "success");
+  await loadPhases();
 }
 
 async function loadPhases() {
@@ -208,6 +239,13 @@ function renderCourseLessons() {
     edit.append(arrow);
     edit.addEventListener("click", () => selectCourseLesson(lesson));
 
+    const remove = document.createElement("button");
+    remove.className = "admin-delete-button";
+    remove.type = "button";
+    remove.textContent = "Excluir passo";
+    remove.setAttribute("aria-label", `Excluir o passo: ${lesson.titulo}`);
+    remove.addEventListener("click", () => deleteCourseLesson(lesson, remove));
+
     const visibility = document.createElement("label");
     visibility.className = "admin-visibility-toggle";
     const toggle = document.createElement("input");
@@ -245,10 +283,37 @@ function renderCourseLessons() {
     });
 
     visibility.append(toggle, track, state);
-    actions.append(edit, visibility);
+    actions.append(edit, visibility, remove);
     row.append(details, actions);
     courseLessonList.append(row);
   });
+}
+
+async function deleteCourseLesson(lesson, button) {
+  const accepted = window.confirm(
+    `Excluir “${lesson.titulo}” e todos os blocos de conteúdo dele? Essa ação não pode ser desfeita.`
+  );
+  if (!accepted) return;
+  button.disabled = true;
+  const { error } = await client.from("aulas").delete().eq("id", lesson.id);
+  if (error) {
+    button.disabled = false;
+    showMessage("Não consegui excluir o passo. Confira a conexão e as regras de acesso.", "error");
+    return;
+  }
+
+  courseLessons = courseLessons.filter((item) => item.id !== lesson.id);
+  if (selectedCourseLessonId === lesson.id) {
+    selectedCourseLessonId = null;
+    courseSteps = [];
+    courseLessonDirty = false;
+    courseStepDirty = false;
+    courseBrowser.hidden = false;
+    courseDetailView.hidden = true;
+    courseStepEditor.hidden = true;
+  }
+  renderCourseLessons();
+  showMessage("Passo e conteúdos excluídos.", "success");
 }
 
 async function loadCourseLessons() {
@@ -354,27 +419,56 @@ function renderCourseSteps() {
     const body = document.createElement("p");
     const excerpt = step.conteudo.trim();
     body.textContent = excerpt.length > 180 ? excerpt.slice(0, 177) + "…" : excerpt;
+    const actions = document.createElement("div");
+    actions.className = "admin-item-actions";
     const edit = document.createElement("button");
     edit.className = "admin-text-button";
     edit.type = "button";
-    edit.textContent = "Editar este passo";
-    edit.setAttribute("aria-label", "Editar o passo: " + step.titulo);
+    edit.textContent = "Editar conteúdo";
+    edit.setAttribute("aria-label", "Editar o conteúdo: " + step.titulo);
     edit.addEventListener("click", () => {
       courseStepId.value = step.id;
       courseStepType.value = step.tipo;
       courseStepTitle.value = step.titulo;
       courseStepContent.value = step.conteudo;
       courseStepOrder.value = step.ordem;
-      courseStepFormTitle.textContent = "Editar passo";
+      courseStepFormTitle.textContent = "Editar conteúdo";
       courseStepForm.querySelector('button[type="submit"]').textContent = "Salvar alterações";
       updateStepContentLabel();
       courseStepDirty = false;
       courseStepTitle.focus();
     });
-    copy.append(kind, title, body, edit);
+
+    const remove = document.createElement("button");
+    remove.className = "admin-delete-button";
+    remove.type = "button";
+    remove.textContent = "Excluir conteúdo";
+    remove.setAttribute("aria-label", "Excluir o conteúdo: " + step.titulo);
+    remove.addEventListener("click", () => deleteCourseStep(step, remove));
+
+    actions.append(edit, remove);
+    copy.append(kind, title, body, actions);
     row.append(copy);
     courseStepList.append(row);
   });
+}
+
+async function deleteCourseStep(step, button) {
+  const accepted = window.confirm(`Excluir o conteúdo “${step.titulo}”? Essa ação não pode ser desfeita.`);
+  if (!accepted) return;
+  button.disabled = true;
+  const { error } = await client.from("aula_passos").delete().eq("id", step.id);
+  if (error) {
+    button.disabled = false;
+    showMessage("Não consegui excluir o conteúdo. Confira a conexão e as regras de acesso.", "error");
+    return;
+  }
+
+  courseSteps = courseSteps.filter((item) => item.id !== step.id);
+  if (courseStepId.value === step.id) resetCourseStepForm();
+  courseStepDirty = false;
+  renderCourseSteps();
+  showMessage("Conteúdo excluído.", "success");
 }
 
 async function loadCourseSteps() {
