@@ -150,7 +150,42 @@ h1 span { color: #a85f76; }
 .lesson summary::-webkit-details-marker { display: none; }
 .lesson-tag { grid-column: 1; color: var(--plum); font-size: .7rem; font-weight: 800; letter-spacing: .1em; }
 .summary-title { grid-column: 1; font: 600 1.5rem/1.3 Georgia, serif; }
-.summary-hint { grid-column: 2; grid-row: 1 / span 2; color: var(--muted); font-size: .78rem; }
+.summary-hint {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  min-width: 8.8rem;
+  padding: .62rem .9rem;
+  border: 1px solid #e1d3e4;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .82);
+  box-shadow: 0 3px 10px rgba(72, 54, 76, .06);
+  color: var(--plum);
+  font-size: .84rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.summary-hint::after {
+  content: "";
+  width: .42rem;
+  height: .42rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg) translateY(-.1rem);
+  transition: transform .18s ease;
+}
+.lesson details[open] .summary-hint::after { transform: rotate(225deg) translate(-.08rem, -.02rem); }
+.lesson summary:hover .summary-hint {
+  border-color: #c9b4d1;
+  background: #f8f3fa;
+  box-shadow: 0 5px 14px rgba(72, 54, 76, .1);
+  transform: translateY(-1px);
+}
+.lesson summary:focus-visible .summary-hint { outline: 3px solid #735e85; outline-offset: 3px; }
 .lesson-body { padding: 0 1.5rem 1.6rem; }
 .plain-intro { max-width: 52rem; font-size: 1.05rem; color: #514d56; }
 .two-columns { display: grid; grid-template-columns: repeat(2,1fr); gap: 1rem; margin: 1.25rem 0; }
@@ -207,7 +242,7 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
   .phase-meta { font-size: .7rem; }
   .lesson summary { padding: 1rem; }
   .summary-title { font-size: 1.25rem; }
-  .summary-hint { font-size: .69rem; }
+  .summary-hint { min-width: 7.4rem; padding: .52rem .7rem; font-size: .76rem; }
   .lesson-body { padding: 0 1rem 1.2rem; }
   .two-columns { grid-template-columns: 1fr; }
   .glossary-grid { grid-template-columns: repeat(2, 1fr); }
@@ -862,4 +897,9 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
     justify-content: space-between;
     width: 100%;
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .summary-hint,
+  .summary-hint::after { transition: none; }
 }

@@ -1,13 +1,29 @@
-const lessons = [...document.querySelectorAll(".lesson details")];
+function updateLessonDisclosureLabel(details) {
+  const hint = details.querySelector(".summary-hint");
+  if (hint) hint.textContent = details.open ? "Fechar passo" : "Abrir passo";
+}
 
-lessons.forEach((current) => {
-  current.addEventListener("toggle", () => {
-    if (!current.open) return;
-    lessons.forEach((other) => {
-      if (other !== current) other.open = false;
+function bindLessonDisclosures() {
+  const lessons = [...document.querySelectorAll(".lesson details")];
+  lessons.forEach((current) => {
+    updateLessonDisclosureLabel(current);
+    if (current.dataset.disclosureBound === "true") return;
+    current.dataset.disclosureBound = "true";
+    current.addEventListener("toggle", () => {
+      if (current.open) {
+        lessons.forEach((other) => {
+          if (other !== current && other.open) {
+            other.open = false;
+            updateLessonDisclosureLabel(other);
+          }
+        });
+      }
+      updateLessonDisclosureLabel(current);
     });
   });
-});
+}
+
+bindLessonDisclosures();
 
 const toast = document.querySelector("#toast");
 const statusMessage = document.querySelector("#connection-status");
@@ -137,7 +153,7 @@ function createCourseLesson(lesson, index) {
   title.textContent = lesson.titulo;
   const hint = document.createElement("span");
   hint.className = "summary-hint";
-  hint.textContent = "Abrir ou fechar";
+  hint.textContent = details.open ? "Fechar passo" : "Abrir passo";
   summary.append(tag, title, hint);
 
   const body = document.createElement("div");
@@ -205,15 +221,7 @@ async function loadCourseLessons() {
       if (oldCard?.classList.contains("lesson")) oldCard.replaceWith(card);
       else extraContainer.append(card);
     });
-    const allLessons = [...document.querySelectorAll(".lesson details")];
-    allLessons.forEach((current) => {
-      current.addEventListener("toggle", () => {
-        if (!current.open) return;
-        allLessons.forEach((other) => {
-          if (other !== current) other.open = false;
-        });
-      });
-    });
+    bindLessonDisclosures();
   } catch {
     // Se o Supabase estiver indisponível, o site mantém os passos locais.
   }
