@@ -261,3 +261,72 @@ set conteudo = concat(
 from public.aulas a
 where p.aula_id = a.id and a.slug = 'aula-4' and p.ordem = 15
   and p.conteudo not like '%domínio fica para a Semana 14%';
+
+-- Small fidelity and safety refinements found during the source review.
+update public.aula_passos p
+set conteudo = 'Cole o plano em outro modelo de IA para pedir uma segunda opinião.
+
+Revise este plano para que um modelo de capacidade média consiga executá-lo uma fase por vez. Não invente informações.
+
+Responda em quatro tabelas simples:
+1. O que está bom e deve continuar, e por quê.
+2. O que está confuso ou incompleto, o problema que isso pode causar e como melhorar.
+3. O que você faria diferente e por quê.
+4. Melhorias por prioridade, com impacto, esforço e fase afetada.
+
+PLANO:
+[cole o plano aqui]'
+from public.aulas a
+where p.aula_id = a.id and a.slug = 'aula-1' and p.ordem = 11;
+
+update public.aula_passos p
+set conteudo = replace(
+  p.conteudo,
+  'Use minha chave de IA, guardada apenas neste navegador nesta fase.',
+  'Para este protótipo local, use minha chave de IA somente neste navegador. Não publique nem compartilhe o projeto com a chave. Na Fase 2, mova a chave para um segredo no servidor.'
+)
+from public.aulas a
+where p.aula_id = a.id and a.slug = 'aula-1' and p.ordem = 15;
+
+update public.aula_passos p
+set conteudo = replace(
+  p.conteudo,
+  'Nesta fase, não crie área de administração ou login.',
+  'Nesta fase, não crie /admin, login nem RLS. Antes de publicar o projeto, configure e confira as regras de segurança do banco, como ensinado na etapa de segurança.'
+)
+from public.aulas a
+where p.aula_id = a.id and a.slug = 'aula-2' and p.ordem = 9
+  and p.conteudo not like '%nem RLS%';
+
+update public.aula_passos p
+set conteudo = replace(
+  p.conteudo,
+  'Recolocação: currículo, vagas analisadas e versões adaptadas são privadas.',
+  'Recolocação: currículo, vagas analisadas, versões adaptadas e apagar a conta são ações privadas.'
+)
+from public.aulas a
+where p.aula_id = a.id and a.slug = 'aula-4' and p.ordem = 5
+  and p.conteudo not like '%apagar a conta%';
+
+insert into public.aula_passos (aula_id, tipo, titulo, conteudo, ordem)
+select a.id, 'dica', 'Se sobrar tempo',
+$lesson$Você pode escolher uma atividade extra:
+• Ajustar textos, cores e mensagens de erro do login.
+• Voltar às dúvidas das Aulas 1 a 3.
+• Experimentar recuperação de senha ou login com Google.
+• Pedir a uma colega que use uma segunda conta para tentar acessar seus dados.
+
+Publicar o projeto na internet e escolher um domínio ficam para a Semana 14.$lesson$, 16
+from public.aulas a
+where a.slug = 'aula-4'
+  and not exists (select 1 from public.aula_passos p where p.aula_id = a.id and p.ordem = 16);
+
+insert into public.aula_passos (aula_id, tipo, titulo, conteudo, ordem)
+select a.id, 'explicacao', 'O que fica desta aula',
+$lesson$1. Autenticação confirma quem pode entrar.
+2. Permissão define o que cada pessoa pode ver ou fazer.
+3. Esconder uma tela não basta: o banco também precisa de regras.
+4. Teste todos os caminhos, não só o botão de login.$lesson$, 17
+from public.aulas a
+where a.slug = 'aula-4'
+  and not exists (select 1 from public.aula_passos p where p.aula_id = a.id and p.ordem = 17);
