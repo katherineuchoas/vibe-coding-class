@@ -163,7 +163,7 @@ function createCourseLesson(lesson, index) {
   article.className = `lesson lesson-${lesson.cor || ["peach", "blue", "lilac", "green"][index % 4]}`;
   article.id = lesson.slug || `aula-extra-${lesson.id}`;
   const details = document.createElement("details");
-  details.open = lesson.slug === "aula-1";
+  details.open = false;
   const summary = document.createElement("summary");
   const tag = document.createElement("span");
   tag.className = "lesson-tag";
@@ -232,7 +232,14 @@ async function loadCourseLessons() {
     });
     const response = await fetch(lessonsUrl, { headers });
     if (!response.ok) {
-      showMessage("Não consegui carregar os passos publicados. Confira as permissões do Supabase.", "error");
+      const details = await response.json().catch(() => null);
+      console.error("[Vibe em Etapas] Falha ao carregar passos do Supabase:", response.status, details);
+      const message = response.status === 401
+        ? "O Supabase recusou a chave pública. Confira se ela pertence ao projeto configurado."
+        : response.status === 403
+          ? "O Supabase bloqueou a leitura. Confira as regras de acesso público (RLS)."
+          : `Não consegui carregar os passos (erro ${response.status}). Confira o Console (F12).`;
+      showMessage(message, "error");
       return;
     }
 
@@ -257,8 +264,9 @@ async function loadCourseLessons() {
     }
 
     bindLessonDisclosures();
-  } catch {
-    showMessage("Não consegui buscar os passos. A página manteve o conteúdo de exemplo.", "error");
+  } catch (error) {
+    console.error("[Vibe em Etapas] Erro de conexão ao buscar passos:", error);
+    showMessage("Não consegui buscar os passos. Confira sua conexão e o Console (F12).", "error");
   }
 }
 

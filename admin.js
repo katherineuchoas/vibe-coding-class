@@ -82,6 +82,10 @@ function showMessage(text, state = "info", duration) {
 
 toast.querySelector(".toast-close").addEventListener("click", hideToast);
 
+function isInvalidSupabaseKey(error) {
+  return /invalid api key/i.test(error?.message || "");
+}
+
 function showPanel(panel) {
   [loginPanel, passwordPanel, deniedPanel, editorPanel].forEach((item) => {
     item.hidden = item !== panel;
@@ -562,7 +566,12 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
 
     submitButton.disabled = false;
     if (error) {
-      showMessage("E-mail ou senha não conferem. Confira os dados e tente de novo.", "error");
+      showMessage(
+        isInvalidSupabaseKey(error)
+          ? "O Supabase recusou a chave pública. Confira se ela pertence ao projeto configurado."
+          : "E-mail ou senha não conferem. Confira os dados e tente de novo.",
+        "error"
+      );
       return;
     }
     await openWorkspace(data.session);
@@ -708,7 +717,12 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
   client.auth.getSession().then(({ data, error }) => {
     if (error) {
       showPanel(loginPanel);
-      showMessage("Não consegui conferir a sessão. Entre novamente.", "error");
+      showMessage(
+        isInvalidSupabaseKey(error)
+          ? "O Supabase recusou a chave pública. Confira se ela pertence ao projeto configurado."
+          : "Não consegui conferir a sessão. Entre novamente.",
+        "error"
+      );
       return;
     }
     openWorkspace(data.session);
