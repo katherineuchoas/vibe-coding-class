@@ -35,6 +35,7 @@ const courseLessonPublished = document.querySelector("#course-lesson-published")
 const courseStepType = document.querySelector("#lesson-step-type");
 const courseStepTitle = document.querySelector("#lesson-step-title");
 const courseStepContent = document.querySelector("#lesson-step-content");
+const courseStepContentLabel = document.querySelector("#lesson-step-content-label");
 const courseStepOrder = document.querySelector("#lesson-step-order");
 const courseStepFormTitle = document.querySelector("#lesson-step-form-title");
 let courseLessonDirty = false;
@@ -210,7 +211,17 @@ function resetCourseStepForm() {
   courseStepOrder.value = String(courseSteps.length + 1);
   courseStepFormTitle.textContent = "Novo passo";
   courseStepForm.querySelector('button[type="submit"]').textContent = "Salvar passo";
+  updateStepContentLabel();
   courseStepDirty = false;
+}
+
+function updateStepContentLabel() {
+  courseStepContentLabel.textContent = {
+    explicacao: "Texto da explicação",
+    atividade: "Instruções da atividade",
+    prompt: "Texto do prompt",
+    dica: "Texto da dica"
+  }[courseStepType.value] || "Conteúdo do passo";
 }
 
 function returnToCourseList() {
@@ -262,6 +273,7 @@ function renderCourseSteps() {
       courseStepOrder.value = step.ordem;
       courseStepFormTitle.textContent = "Editar passo";
       courseStepForm.querySelector('button[type="submit"]').textContent = "Salvar alterações";
+      updateStepContentLabel();
       courseStepDirty = false;
       courseStepTitle.focus();
     });
@@ -281,6 +293,7 @@ async function loadCourseSteps() {
     return;
   }
   courseSteps = data || [];
+  if (!courseStepDirty) courseStepOrder.value = String(courseSteps.length + 1);
   renderCourseSteps();
 }
 
@@ -404,6 +417,7 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
   courseLessonForm.addEventListener("change", () => { courseLessonDirty = true; });
   courseStepForm.addEventListener("input", () => { courseStepDirty = true; });
   courseStepForm.addEventListener("change", () => { courseStepDirty = true; });
+  courseStepType.addEventListener("change", updateStepContentLabel);
   courseLessonForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const values = {
