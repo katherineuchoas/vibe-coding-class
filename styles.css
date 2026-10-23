@@ -40,16 +40,86 @@ h1 span { color: #a85f76; }
 .button-primary { background: #674b72; color: white; box-shadow: 0 5px 16px rgba(103,75,114,.18); }
 .button-dark { background: var(--ink); color: white; }
 .hero-note { position: relative; min-height: 215px; display: grid; align-content: center; padding: 2rem; border: 1px solid #efd5ce; border-radius: 28px 28px 80px 28px; background: linear-gradient(145deg, #f8e3d7, #f2e4f1 72%); transform: rotate(1.5deg); box-shadow: 0 18px 38px rgba(135,91,111,.13); }
-.hero-orbit { position: absolute; z-index: 0; top: -2.5rem; right: -1.5rem; width: 8.5rem; aspect-ratio: 1; border-radius: 50%; background: rgba(255,249,214,.78); cursor: pointer; }
-.hero-orbit::before, .hero-orbit::after { content: ""; position: absolute; inset: 22% -14%; border: 1px solid rgba(126,91,133,.34); border-radius: 50%; opacity: 0; transition: opacity .35s ease; }
-.hero-orbit::before { transform: rotate(-28deg); }
-.hero-orbit::after { inset: 4% 28%; transform: rotate(38deg); border-color: rgba(181,119,130,.3); }
-.hero-electron { position: absolute; z-index: 1; top: 17%; left: 68%; width: .42rem; height: .42rem; border-radius: 50%; background: #a8736c; opacity: 0; transform: scale(.5); transition: opacity .3s ease, transform .3s ease; }
-.hero-orbit:hover::before, .hero-orbit:hover::after, .hero-orbit:focus-visible::before, .hero-orbit:focus-visible::after { opacity: 1; }
-.hero-orbit:hover .hero-electron, .hero-orbit:focus-visible .hero-electron { opacity: .85; transform: scale(1); animation: electron-drift 3.8s ease-in-out infinite alternate; }
+.hero-orbit {
+  position: absolute;
+  isolation: isolate;
+  z-index: 0;
+  top: -2.5rem;
+  right: -1.5rem;
+  width: 8.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgba(255, 249, 214, .78);
+  cursor: pointer;
+}
+.hero-orbit::before,
+.hero-orbit::after {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid rgba(126, 91, 133, .42);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity .35s ease, transform .8s cubic-bezier(.2,.75,.25,1);
+}
+.hero-orbit::before {
+  inset: 12% -34%;
+  transform: scaleX(.12) rotate(-28deg);
+}
+.hero-orbit::after {
+  inset: -22% 28%;
+  border-color: rgba(181, 119, 130, .38);
+  transform: scaleY(.12) rotate(38deg);
+}
+.hero-electron {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: .42rem;
+  height: .42rem;
+  border-radius: 50%;
+  background: #a8736c;
+  opacity: 0;
+  transform: translate(-50%, -50%) rotate(0deg) translateX(5.2rem);
+  transition: opacity .3s ease;
+}
+.hero-orbit:hover::before,
+.hero-orbit:focus-visible::before {
+  opacity: .8;
+  transform: scaleX(1) rotate(-28deg);
+  animation: orbit-spin 14s linear infinite;
+}
+.hero-orbit:hover::after,
+.hero-orbit:focus-visible::after {
+  opacity: .68;
+  transform: scaleY(1) rotate(38deg);
+  animation: orbit-spin 18s linear infinite reverse;
+}
+.hero-orbit:hover .hero-electron,
+.hero-orbit:focus-visible .hero-electron {
+  opacity: .9;
+  animation: electron-orbit 4s linear infinite;
+}
 .hero-orbit:focus-visible { outline: 2px solid #a8736c; outline-offset: 4px; }
-@keyframes electron-drift { to { translate: -1.1rem 1.5rem; } }
-@media (prefers-reduced-motion: reduce) { .hero-orbit::before, .hero-orbit::after, .hero-electron { transition: none; } .hero-orbit:hover .hero-electron, .hero-orbit:focus-visible .hero-electron { animation: none; } }
+@keyframes orbit-spin {
+  to { rotate: 360deg; }
+}
+@keyframes electron-orbit {
+  to { transform: translate(-50%, -50%) rotate(360deg) translateX(5.2rem); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-orbit::before,
+  .hero-orbit::after,
+  .hero-electron { transition: none; }
+  .hero-orbit:hover::before,
+  .hero-orbit:hover::after,
+  .hero-orbit:focus-visible::before,
+  .hero-orbit:focus-visible::after { animation: none; }
+  .hero-orbit:hover .hero-electron,
+  .hero-orbit:focus-visible .hero-electron { animation: none; }
+}
 .hero-note p { position: relative; z-index: 1; margin: .5rem 0; font-family: Georgia, serif; font-size: 1.2rem; line-height: 1.55; }
 .note-spark { color: #a8736c; font-size: 1.5rem; }
 .note-doodle { position: absolute; bottom: .65rem; right: 1.6rem; color: #a8736c; font-size: 2.2rem; }
@@ -208,33 +278,7 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
 
 
 /* Small original doodles and calm motion for the learning path */
-.hero-note {
-  isolation: isolate;
-}
-.hero-note::before,
-.hero-note::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  pointer-events: none;
-}
-.hero-note::before {
-  width: 8.5rem;
-  aspect-ratio: 1;
-  top: -2.5rem;
-  right: -1.5rem;
-  border-radius: 50%;
-  background: rgba(255, 249, 214, .72);
-}
-.hero-note::after {
-  width: 10rem;
-  height: 4rem;
-  top: 1.25rem;
-  right: -1rem;
-  border: 1px solid rgba(126, 91, 133, .24);
-  border-radius: 50%;
-  transform: rotate(-28deg);
-}
+.hero-note { isolation: isolate; }
 .hero-note p,
 .hero-note .note-spark,
 .hero-note .note-doodle {
