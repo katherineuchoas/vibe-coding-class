@@ -26,19 +26,39 @@ function bindLessonDisclosures() {
 bindLessonDisclosures();
 
 const toast = document.querySelector("#toast");
-const statusMessage = document.querySelector("#connection-status");
+const toastText = toast.querySelector(".toast-text");
+const toastIcon = toast.querySelector(".toast-icon");
 let toastTimer;
 
-function showMessage(message) {
-  toast.textContent = message;
-  toast.classList.add("show");
+function hideToast() {
   window.clearTimeout(toastTimer);
-  toastTimer = window.setTimeout(() => toast.classList.remove("show"), 2200);
+  toast.classList.remove("show");
+  toast.hidden = true;
 }
 
+function showMessage(message, state = "success", duration) {
+  if (!message) {
+    hideToast();
+    return;
+  }
+
+  const kind = state || "info";
+  toastText.textContent = message;
+  toast.dataset.state = kind;
+  toastIcon.textContent = kind === "error" ? "!" : kind === "success" ? "✓" : "i";
+  toast.setAttribute("role", kind === "error" ? "alert" : "status");
+  toast.setAttribute("aria-live", kind === "error" ? "assertive" : "polite");
+  toast.hidden = false;
+  window.requestAnimationFrame(() => toast.classList.add("show"));
+  window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(hideToast, duration || (kind === "error" ? 7000 : 4200));
+}
+
+toast.querySelector(".toast-close").addEventListener("click", hideToast);
+
 function setConnectionStatus(message, state = "") {
-  statusMessage.textContent = message;
-  statusMessage.dataset.state = state;
+  if (state === "loading") return;
+  showMessage(message, state || "info");
 }
 
 function renderPhases(rows) {
