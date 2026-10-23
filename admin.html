@@ -7,10 +7,10 @@
   <meta name="description" content="Área privada de edição das etapas do curso Vibe em Etapas.">
   <title>Área de edição — Vibe em Etapas</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261023-phase-editor">
+  <link rel="stylesheet" href="styles.css?v=20261023-bottom-toast">
   <script src="supabase-config.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script defer src="admin.js?v=20261023-phase-editor"></script>
+  <script defer src="admin.js?v=20261023-bottom-toast"></script>
 </head>
 <body class="admin-page">
   <a class="skip-link" href="#admin-main">Pular para o conteúdo</a>
@@ -33,7 +33,6 @@
       <p class="hero-lede">Escolha o que deseja organizar. Os passos e suas partes ficam em uma área; as etapas do caminho, em outra.</p>
     </header>
 
-    <p class="admin-message" id="admin-message" role="status" aria-live="polite"></p>
 
     <section class="admin-panel admin-auth-panel" id="login-panel" aria-labelledby="login-title">
       <p class="admin-panel-kicker">ACESSO PROTEGIDO</p>
@@ -181,5 +180,10 @@
     <p>Vibe em Etapas · Acesso de edição protegido</p>
     <a href="index.html">Voltar aos passos</a>
   </footer>
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden>
+    <span class="toast-icon" aria-hidden="true"></span>
+    <span class="toast-text"></span>
+    <button class="toast-close" type="button" aria-label="Fechar aviso">×</button>
+  </div>
 </body>
 </html>
