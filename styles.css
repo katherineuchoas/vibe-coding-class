@@ -92,14 +92,17 @@ h1 span { color: #a85f76; }
   transform: translate(-50%, -50%) rotate(0deg) translateX(3.2rem);
 }
 .hero-orbit:hover::before,
+.hero-note:hover .hero-orbit::before,
 .hero-orbit:focus-visible::before {
   animation: orbit-spin 26s linear infinite;
 }
 .hero-orbit:hover::after,
+.hero-note:hover .hero-orbit::after,
 .hero-orbit:focus-visible::after {
   animation: orbit-spin 34s linear infinite reverse;
 }
 .hero-orbit:hover .hero-electron,
+.hero-note:hover .hero-electron,
 .hero-orbit:focus-visible .hero-electron {
   animation: electron-orbit 12s linear infinite;
 }
@@ -112,10 +115,13 @@ h1 span { color: #a85f76; }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-orbit:hover::before,
+  .hero-note:hover .hero-orbit::before,
   .hero-orbit:hover::after,
+  .hero-note:hover .hero-orbit::after,
   .hero-orbit:focus-visible::before,
   .hero-orbit:focus-visible::after,
   .hero-orbit:hover .hero-electron,
+  .hero-note:hover .hero-electron,
   .hero-orbit:focus-visible .hero-electron { animation: none; }
 }
 .hero-note p { position: relative; z-index: 1; margin: .5rem 0; font-family: Georgia, serif; font-size: 1.2rem; line-height: 1.55; }
