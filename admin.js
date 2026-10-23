@@ -146,25 +146,70 @@ function renderCourseLessons() {
     courseLessonList.append(empty);
     return;
   }
+
   courseLessons.forEach((lesson) => {
     const row = document.createElement("article");
-    row.className = "admin-phase-item";
+    row.className = "admin-phase-item admin-course-item";
+
     const details = document.createElement("div");
+    details.className = "admin-course-copy";
     const title = document.createElement("strong");
     title.textContent = lesson.titulo;
     const summary = document.createElement("p");
     summary.textContent = lesson.resumo || "Sem resumo por enquanto.";
+    details.append(title, summary);
+
     const actions = document.createElement("div");
     actions.className = "admin-course-actions";
+
     const edit = document.createElement("button");
-    edit.className = "admin-text-button";
+    edit.className = "admin-course-edit";
     edit.type = "button";
-    edit.textContent = "Abrir passo";
+    edit.setAttribute("aria-label", `Editar o passo: ${lesson.titulo}`);
+    edit.append(document.createTextNode("Editar conteúdo"));
+    const arrow = document.createElement("span");
+    arrow.setAttribute("aria-hidden", "true");
+    arrow.textContent = "→";
+    edit.append(arrow);
     edit.addEventListener("click", () => selectCourseLesson(lesson));
-    const visibility = document.createElement("span");
-    visibility.className = "small-note";
-    visibility.textContent = lesson.publicada ? "Visível" : "Rascunho";
-    details.append(title, summary);
+
+    const visibility = document.createElement("label");
+    visibility.className = "admin-visibility-toggle";
+    const toggle = document.createElement("input");
+    toggle.type = "checkbox";
+    toggle.checked = Boolean(lesson.publicada);
+    toggle.setAttribute("aria-label", `Mostrar “${lesson.titulo}” na página pública`);
+    const track = document.createElement("span");
+    track.className = "admin-toggle-track";
+    track.setAttribute("aria-hidden", "true");
+    const state = document.createElement("span");
+    state.className = "admin-visibility-state";
+    state.textContent = lesson.publicada ? "Visível" : "Oculto";
+
+    toggle.addEventListener("change", async () => {
+      const previous = !toggle.checked;
+      toggle.disabled = true;
+      try {
+        const { error } = await client.from("aulas")
+          .update({ publicada: toggle.checked })
+          .eq("id", lesson.id);
+        if (error) throw error;
+        lesson.publicada = toggle.checked;
+        state.textContent = lesson.publicada ? "Visível" : "Oculto";
+        showMessage(
+          lesson.publicada ? "Passo publicado na página pública." : "Passo ocultado da página pública.",
+          "success"
+        );
+      } catch {
+        toggle.checked = previous;
+        state.textContent = previous ? "Visível" : "Oculto";
+        showMessage("Não consegui mudar a visibilidade. Confira a conexão e as regras de acesso.", "error");
+      } finally {
+        toggle.disabled = false;
+      }
+    });
+
+    visibility.append(toggle, track, state);
     actions.append(edit, visibility);
     row.append(details, actions);
     courseLessonList.append(row);
