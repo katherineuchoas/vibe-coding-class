@@ -13,10 +13,15 @@ const phaseId = document.querySelector("#phase-id");
 const phaseTitle = document.querySelector("#phase-title");
 const phaseDescription = document.querySelector("#phase-description");
 const cancelEdit = document.querySelector("#cancel-edit");
-const currentUser = document.querySelector("#current-user");
+const headerEmail = document.querySelector("#admin-header-email");
+const returnLink = document.querySelector("#admin-return-link");
 let client;
 let phases = [];
 const courseLessonList = document.querySelector("#course-lesson-list");
+const courseBrowser = document.querySelector("#course-browser");
+const courseDetailView = document.querySelector("#course-detail-view");
+const courseDetailTitle = document.querySelector("#course-detail-title");
+const courseDetailSummary = document.querySelector("#course-detail-summary");
 const courseLessonForm = document.querySelector("#course-lesson-form");
 const courseLessonId = document.querySelector("#course-lesson-id");
 const courseLessonTitle = document.querySelector("#course-lesson-title");
@@ -25,6 +30,16 @@ const courseStepEditor = document.querySelector("#lesson-step-editor");
 const courseStepList = document.querySelector("#lesson-step-list");
 const courseStepForm = document.querySelector("#lesson-step-form");
 const courseStepId = document.querySelector("#lesson-step-id");
+const courseLessonOrder = document.querySelector("#course-lesson-order");
+const courseLessonPublished = document.querySelector("#course-lesson-published");
+const courseStepType = document.querySelector("#lesson-step-type");
+const courseStepTitle = document.querySelector("#lesson-step-title");
+const courseStepContent = document.querySelector("#lesson-step-content");
+const courseStepContentLabel = document.querySelector("#lesson-step-content-label");
+const courseStepOrder = document.querySelector("#lesson-step-order");
+const courseStepFormTitle = document.querySelector("#lesson-step-form-title");
+let courseLessonDirty = false;
+let courseStepDirty = false;
 let courseLessons = [];
 let selectedCourseLessonId = null;
 let courseSteps = [];
@@ -40,6 +55,9 @@ function showPanel(panel) {
   [loginPanel, passwordPanel, deniedPanel, editorPanel].forEach((item) => {
     item.hidden = item !== panel;
   });
+  const isEditor = panel === editorPanel;
+  headerEmail.hidden = !isEditor;
+  returnLink.hidden = isEditor;
 }
 
 function startNewPhase() {
@@ -127,7 +145,7 @@ function renderCourseLessons() {
     const edit = document.createElement("button");
     edit.className = "admin-text-button";
     edit.type = "button";
-    edit.textContent = "Editar aula e passos";
+    edit.textContent = "Abrir aula";
     edit.addEventListener("click", () => selectCourseLesson(lesson));
     const visibility = document.createElement("span");
     visibility.className = "small-note";
@@ -157,22 +175,63 @@ async function loadCourseLessons() {
 
 async function selectCourseLesson(lesson) {
   selectedCourseLessonId = lesson.id;
+  courseBrowser.hidden = true;
+  courseDetailView.hidden = false;
+  courseDetailTitle.textContent = lesson.titulo;
+  courseDetailSummary.textContent = lesson.resumo || "Esta aula ainda não tem um resumo.";
   courseLessonId.value = lesson.id;
   courseLessonTitle.value = lesson.titulo;
   courseLessonSummary.value = lesson.resumo || "";
-  document.querySelector("#course-lesson-order").value = lesson.ordem;
-  document.querySelector("#course-lesson-published").checked = lesson.publicada;
+  courseLessonOrder.value = lesson.ordem;
+  courseLessonPublished.checked = lesson.publicada;
+  courseLessonDirty = false;
   courseStepEditor.hidden = false;
+  resetCourseStepForm();
   await loadCourseSteps();
 }
 
 function startNewCourseLesson() {
   selectedCourseLessonId = null;
+  courseBrowser.hidden = true;
+  courseDetailView.hidden = false;
+  courseDetailTitle.textContent = "Nova aula";
+  courseDetailSummary.textContent = "Preencha os dados e salve para começar a adicionar os passos.";
   courseLessonForm.reset();
   courseLessonId.value = "";
-  document.querySelector("#course-lesson-order").value = String(courseLessons.length + 1);
+  courseLessonOrder.value = String(courseLessons.length + 1);
+  courseLessonPublished.checked = true;
+  courseLessonDirty = false;
   courseStepEditor.hidden = true;
   courseLessonTitle.focus();
+}
+
+function resetCourseStepForm() {
+  courseStepForm.reset();
+  courseStepId.value = "";
+  courseStepOrder.value = String(courseSteps.length + 1);
+  courseStepFormTitle.textContent = "Novo passo";
+  courseStepForm.querySelector('button[type="submit"]').textContent = "Salvar passo";
+  updateStepContentLabel();
+  courseStepDirty = false;
+}
+
+function updateStepContentLabel() {
+  courseStepContentLabel.textContent = {
+    explicacao: "Texto da explicação",
+    atividade: "Instruções da atividade",
+    prompt: "Texto do prompt",
+    dica: "Texto da dica"
+  }[courseStepType.value] || "Conteúdo do passo";
+}
+
+function returnToCourseList() {
+  if ((courseLessonDirty || courseStepDirty) && !window.confirm("Há mudanças que ainda não foram salvas. Quer descartá-las e voltar à lista?")) return;
+  courseLessonDirty = false;
+  courseStepDirty = false;
+  courseBrowser.hidden = false;
+  courseDetailView.hidden = true;
+  courseStepEditor.hidden = true;
+  selectedCourseLessonId = null;
 }
 
 function renderCourseSteps() {
@@ -190,21 +249,35 @@ function renderCourseSteps() {
     const copy = document.createElement("div");
     const title = document.createElement("strong");
     title.textContent = step.titulo;
+    const kind = document.createElement("span");
+    kind.className = "step-type-badge";
+    kind.textContent = ({
+      explicacao: "Explicação",
+      atividade: "Atividade",
+      prompt: "Prompt",
+      dica: "Dica"
+    })[step.tipo] || "Conteúdo";
     const body = document.createElement("p");
-    body.textContent = step.conteudo;
+    const excerpt = step.conteudo.trim();
+    body.textContent = excerpt.length > 180 ? excerpt.slice(0, 177) + "…" : excerpt;
     const edit = document.createElement("button");
     edit.className = "admin-text-button";
     edit.type = "button";
-    edit.textContent = "Editar passo";
+    edit.textContent = "Editar este passo";
+    edit.setAttribute("aria-label", "Editar o passo: " + step.titulo);
     edit.addEventListener("click", () => {
       courseStepId.value = step.id;
-      document.querySelector("#lesson-step-type").value = step.tipo;
-      document.querySelector("#lesson-step-title").value = step.titulo;
-      document.querySelector("#lesson-step-content").value = step.conteudo;
-      document.querySelector("#lesson-step-order").value = step.ordem;
-      document.querySelector("#lesson-step-title").focus();
+      courseStepType.value = step.tipo;
+      courseStepTitle.value = step.titulo;
+      courseStepContent.value = step.conteudo;
+      courseStepOrder.value = step.ordem;
+      courseStepFormTitle.textContent = "Editar passo";
+      courseStepForm.querySelector('button[type="submit"]').textContent = "Salvar alterações";
+      updateStepContentLabel();
+      courseStepDirty = false;
+      courseStepTitle.focus();
     });
-    copy.append(title, body, edit);
+    copy.append(kind, title, body, edit);
     row.append(copy);
     courseStepList.append(row);
   });
@@ -220,6 +293,7 @@ async function loadCourseSteps() {
     return;
   }
   courseSteps = data || [];
+  if (!courseStepDirty) courseStepOrder.value = String(courseSteps.length + 1);
   renderCourseSteps();
 }
 
@@ -233,7 +307,7 @@ async function openWorkspace(session) {
     return;
   }
 
-  currentUser.textContent = session.user.email || "conta conectada";
+  headerEmail.textContent = session.user.email || "Conta conectada";
   showMessage("Conferindo se esta conta pode editar…");
   const { data, error } = await client
     .from("admin_users")
@@ -338,13 +412,19 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
   });
 
   document.querySelector("#new-course-lesson").addEventListener("click", startNewCourseLesson);
+  document.querySelector("#back-to-course-list").addEventListener("click", returnToCourseList);
+  courseLessonForm.addEventListener("input", () => { courseLessonDirty = true; });
+  courseLessonForm.addEventListener("change", () => { courseLessonDirty = true; });
+  courseStepForm.addEventListener("input", () => { courseStepDirty = true; });
+  courseStepForm.addEventListener("change", () => { courseStepDirty = true; });
+  courseStepType.addEventListener("change", updateStepContentLabel);
   courseLessonForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     const values = {
       titulo: courseLessonTitle.value.trim(),
       resumo: courseLessonSummary.value.trim(),
-      ordem: Number(document.querySelector("#course-lesson-order").value),
-      publicada: document.querySelector("#course-lesson-published").checked
+      ordem: Number(courseLessonOrder.value),
+      publicada: courseLessonPublished.checked
     };
     const result = courseLessonId.value
       ? await client.from("aulas").update(values).eq("id", courseLessonId.value)
@@ -354,15 +434,14 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
       return;
     }
     if (!courseLessonId.value) selectedCourseLessonId = result.data.id;
+    courseLessonDirty = false;
     showMessage("Aula salva.", "success");
     await loadCourseLessons();
   });
 
   document.querySelector("#new-lesson-step").addEventListener("click", () => {
-    courseStepForm.reset();
-    courseStepId.value = "";
-    document.querySelector("#lesson-step-order").value = String(courseSteps.length + 1);
-    document.querySelector("#lesson-step-title").focus();
+    resetCourseStepForm();
+    courseStepTitle.focus();
   });
 
   courseStepForm.addEventListener("submit", async (event) => {
@@ -370,10 +449,10 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
     if (!selectedCourseLessonId) return;
     const values = {
       aula_id: selectedCourseLessonId,
-      tipo: document.querySelector("#lesson-step-type").value,
-      titulo: document.querySelector("#lesson-step-title").value.trim(),
-      conteudo: document.querySelector("#lesson-step-content").value.trim(),
-      ordem: Number(document.querySelector("#lesson-step-order").value)
+      tipo: courseStepType.value,
+      titulo: courseStepTitle.value.trim(),
+      conteudo: courseStepContent.value.trim(),
+      ordem: Number(courseStepOrder.value)
     };
     const result = courseStepId.value
       ? await client.from("aula_passos").update(values).eq("id", courseStepId.value)
@@ -382,9 +461,7 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
       showMessage("Não consegui salvar o passo. Confira a conexão e as regras de acesso.", "error");
       return;
     }
-    courseStepForm.reset();
-    courseStepId.value = "";
-    document.querySelector("#lesson-step-order").value = String(courseSteps.length + 1);
+    resetCourseStepForm();
     showMessage("Passo salvo.", "success");
     await loadCourseSteps();
   });
