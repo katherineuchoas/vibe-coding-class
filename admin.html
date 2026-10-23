@@ -19,7 +19,7 @@
       <span class="brand-mark" aria-hidden="true">✳</span>
       <span>vibe <strong>em etapas</strong></span>
     </a>
-    <a class="top-link" id="admin-return-link" href="index.html" hidden>Voltar às aulas</a>
+    <a class="top-link" id="admin-return-link" href="index.html" hidden>Voltar aos passos</a>
     <div class="admin-session" id="admin-session" hidden>
       <span class="admin-header-email" id="admin-header-email"></span>
       <button class="button button-dark" id="sign-out" type="button">Sair</button>
@@ -30,7 +30,7 @@
     <header class="admin-page-heading">
       <p class="eyebrow">ÁREA DE EDIÇÃO</p>
       <h1>Conteúdo do curso</h1>
-      <p class="hero-lede">Escolha o que deseja organizar. As aulas e suas partes ficam em uma área; as etapas do caminho, em outra.</p>
+      <p class="hero-lede">Escolha o que deseja organizar. Os passos e suas partes ficam em uma área; as etapas do caminho, em outra.</p>
     </header>
 
     <p class="admin-message" id="admin-message" role="status" aria-live="polite"></p>
@@ -73,20 +73,20 @@
         </div>
       </div>
       <div class="admin-mode-switch" role="group" aria-label="Escolha o que deseja editar">
-        <button type="button" id="mode-lessons" aria-pressed="true">Editar aulas</button>
+        <button type="button" id="mode-lessons" aria-pressed="true">Editar passos</button>
         <button type="button" id="mode-phases" aria-pressed="false">Editar etapas</button>
       </div>
 
       <section class="admin-panel course-editor" id="course-management" aria-labelledby="course-editor-title">
         <div class="course-editor-heading">
-          <div><p class="admin-panel-kicker">CONTEÚDO DO CURSO</p><h2 id="course-editor-title">Editar uma aula</h2></div>
-          <p>Primeiro escolha uma aula. Depois você verá o que já existe e poderá editar cada parte separadamente.</p>
+          <div><p class="admin-panel-kicker">CONTEÚDO DO CURSO</p><h2 id="course-editor-title">Editar um passo</h2></div>
+          <p>Primeiro escolha um passo. Depois você verá o que já existe e poderá editar cada parte separadamente.</p>
         </div>
 
         <div class="course-browser" id="course-browser">
           <div class="course-browser-heading">
-            <div><h3>Escolha uma aula</h3><p>Abra uma aula para editar seu título, resumo e conteúdo.</p></div>
-            <button class="button button-secondary" id="new-course-lesson" type="button">Criar aula</button>
+            <div><h3>Escolha um passo</h3><p>Abra um passo para editar seu título, resumo e conteúdo.</p></div>
+            <button class="button button-secondary" id="new-course-lesson" type="button">Criar passo</button>
           </div>
           <div id="course-lesson-list" class="admin-phase-list" aria-live="polite"></div>
         </div>
@@ -94,8 +94,8 @@
         <section class="course-detail-view" id="course-detail-view" aria-labelledby="course-detail-title" hidden>
           <div class="course-detail-heading">
             <div>
-              <p class="admin-panel-kicker">AULA SELECIONADA</p>
-              <h3 id="course-detail-title">Editar aula</h3>
+              <p class="admin-panel-kicker">PASSO SELECIONADO</p>
+              <h3 id="course-detail-title">Editar passo</h3>
               <p id="course-detail-summary">As informações atuais aparecem nos campos abaixo.</p>
             </div>
             <button class="button button-secondary" id="back-to-course-list" type="button">Voltar à lista</button>
@@ -103,23 +103,23 @@
 
           <div class="course-detail-grid">
             <section class="admin-panel course-data-panel" aria-labelledby="course-data-title">
-              <p class="admin-panel-kicker">1 · DADOS DA AULA</p>
+              <p class="admin-panel-kicker">1 · DADOS DO PASSO</p>
               <h4 id="course-data-title">Título e resumo</h4>
               <form id="course-lesson-form">
                 <input id="course-lesson-id" type="hidden">
-                <label for="course-lesson-title">Título da aula</label>
+                <label for="course-lesson-title">Título do passo</label>
                 <input id="course-lesson-title" maxlength="120" required>
                 <label for="course-lesson-summary">Subtítulo ou resumo</label>
                 <textarea id="course-lesson-summary" rows="3" maxlength="500"></textarea>
-                <label for="course-lesson-order">Ordem da aula</label>
+                <label for="course-lesson-order">Ordem do passo</label>
                 <input id="course-lesson-order" type="number" min="1" value="1" required>
                 <label class="admin-check"><input id="course-lesson-published" type="checkbox" checked> Mostrar na página pública</label>
-                <button class="button button-primary" type="submit">Salvar dados da aula</button>
+                <button class="button button-primary" type="submit">Salvar dados do passo</button>
               </form>
             </section>
 
             <section class="lesson-step-editor course-steps-panel" id="lesson-step-editor" aria-labelledby="lesson-steps-title" hidden>
-              <p class="admin-panel-kicker">2 · CONTEÚDO DA AULA</p>
+              <p class="admin-panel-kicker">2 · CONTEÚDO DO PASSO</p>
               <h4 id="lesson-steps-title">Explicações, atividades e prompts</h4>
               <p class="small-note">Cada bloco é um passo independente. Edite o título e o texto de cada um, ou crie um novo.</p>
               <div id="lesson-step-list" class="admin-phase-list" aria-live="polite"></div>
@@ -179,7 +179,7 @@
 
   <footer class="footer">
     <p>Vibe em Etapas · Acesso de edição protegido</p>
-    <a href="index.html">Voltar às aulas</a>
+    <a href="index.html">Voltar aos passos</a>
   </footer>
 </body>
 </html>
