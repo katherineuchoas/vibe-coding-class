@@ -48,59 +48,56 @@ h1 span { color: #a85f76; }
   right: -1.5rem;
   width: 8.5rem;
   aspect-ratio: 1;
-  border-radius: 50%;
-  background: rgba(255, 249, 214, .78);
   cursor: pointer;
 }
 .hero-orbit::before,
 .hero-orbit::after {
   content: "";
   position: absolute;
-  z-index: -1;
+  z-index: 0;
   pointer-events: none;
-  border: 1px solid rgba(126, 91, 133, .42);
+  border: 1px solid rgba(126, 91, 133, .38);
   border-radius: 50%;
-  opacity: 0;
-  transition: opacity .35s ease, transform .8s cubic-bezier(.2,.75,.25,1);
 }
 .hero-orbit::before {
   inset: 12% -34%;
-  transform: scaleX(.12) rotate(-28deg);
+  transform: rotate(-28deg);
 }
 .hero-orbit::after {
   inset: -22% 28%;
-  border-color: rgba(181, 119, 130, .38);
-  transform: scaleY(.12) rotate(38deg);
+  border-color: rgba(181, 119, 130, .34);
+  transform: rotate(38deg);
+}
+.hero-orbit-ball {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border-radius: 50%;
+  background: #fff9d6;
+  box-shadow: 0 5px 18px rgba(174, 150, 92, .08);
 }
 .hero-electron {
   position: absolute;
   z-index: 1;
   top: 50%;
   left: 50%;
-  width: .42rem;
-  height: .42rem;
+  width: .38rem;
+  height: .38rem;
   border-radius: 50%;
   background: #a8736c;
-  opacity: 0;
   transform: translate(-50%, -50%) rotate(0deg) translateX(5.2rem);
-  transition: opacity .3s ease;
 }
 .hero-orbit:hover::before,
 .hero-orbit:focus-visible::before {
-  opacity: .8;
-  transform: scaleX(1) rotate(-28deg);
-  animation: orbit-spin 14s linear infinite;
+  animation: orbit-spin 26s linear infinite;
 }
 .hero-orbit:hover::after,
 .hero-orbit:focus-visible::after {
-  opacity: .68;
-  transform: scaleY(1) rotate(38deg);
-  animation: orbit-spin 18s linear infinite reverse;
+  animation: orbit-spin 34s linear infinite reverse;
 }
 .hero-orbit:hover .hero-electron,
 .hero-orbit:focus-visible .hero-electron {
-  opacity: .9;
-  animation: electron-orbit 4s linear infinite;
+  animation: electron-orbit 9s linear infinite;
 }
 .hero-orbit:focus-visible { outline: 2px solid #a8736c; outline-offset: 4px; }
 @keyframes orbit-spin {
@@ -110,13 +107,10 @@ h1 span { color: #a85f76; }
   to { transform: translate(-50%, -50%) rotate(360deg) translateX(5.2rem); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-orbit::before,
-  .hero-orbit::after,
-  .hero-electron { transition: none; }
   .hero-orbit:hover::before,
   .hero-orbit:hover::after,
   .hero-orbit:focus-visible::before,
-  .hero-orbit:focus-visible::after { animation: none; }
+  .hero-orbit:focus-visible::after,
   .hero-orbit:hover .hero-electron,
   .hero-orbit:focus-visible .hero-electron { animation: none; }
 }
