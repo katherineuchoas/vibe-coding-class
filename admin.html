@@ -71,31 +71,9 @@
         <button class="button button-dark" id="sign-out" type="button">Sair</button>
       </div>
       <nav class="admin-shortcuts" aria-label="Atalhos da área de edição">
-        <a href="#phase-management">Etapas</a>
         <a href="#course-management">Aulas e passos</a>
+        <a href="#phase-management">Etapas do caminho</a>
       </nav>
-
-      <div class="admin-columns">
-        <section class="admin-panel admin-content-panel" id="phase-management" aria-labelledby="phase-list-title">
-          <h3 id="phase-list-title">Etapas existentes</h3>
-          <div class="admin-phase-list" id="phase-list"></div>
-          <button class="button button-secondary" id="new-phase" type="button">Adicionar etapa</button>
-        </section>
-
-        <section class="admin-panel admin-content-panel" aria-labelledby="phase-form-title">
-          <h3 id="phase-form-title">Editar etapa</h3>
-          <form id="phase-form">
-            <input id="phase-id" name="id" type="hidden">
-            <label for="phase-title">Título</label>
-            <input id="phase-title" name="title" maxlength="100" required>
-            <label for="phase-description">Descrição</label>
-            <textarea id="phase-description" name="description" rows="4" maxlength="300" required></textarea>
-            <button class="button button-primary" type="submit">Salvar etapa</button>
-            <button class="admin-text-button" id="cancel-edit" type="button" hidden>Cancelar edição</button>
-          </form>
-          <p class="small-note">A página pública continua aberta para leitura. Só uma conta autorizada pode salvar mudanças.</p>
-        </section>
-      </div>
 
       <section class="admin-panel course-editor" id="course-management" aria-labelledby="course-editor-title">
         <div class="course-editor-heading">
@@ -155,7 +133,7 @@
                 </select>
                 <label for="lesson-step-title">Título do passo</label>
                 <input id="lesson-step-title" maxlength="120" required>
-                <label for="lesson-step-content">Texto do passo</label>
+                <label for="lesson-step-content" id="lesson-step-content-label">Conteúdo do passo</label>
                 <textarea id="lesson-step-content" rows="6" maxlength="8000" required></textarea>
                 <label for="lesson-step-order">Ordem do passo</label>
                 <input id="lesson-step-order" type="number" min="1" value="1" required>
@@ -168,6 +146,30 @@
           </div>
         </section>
       </section>
+
+      <div class="admin-columns">
+        <section class="admin-panel admin-content-panel" id="phase-management" aria-labelledby="phase-list-title">
+          <h3 id="phase-list-title">Etapas existentes</h3>
+          <div class="admin-phase-list" id="phase-list"></div>
+          <button class="button button-secondary" id="new-phase" type="button">Adicionar etapa</button>
+        </section>
+
+        <section class="admin-panel admin-content-panel" aria-labelledby="phase-form-title">
+          <h3 id="phase-form-title">Editar etapa</h3>
+          <form id="phase-form">
+            <input id="phase-id" name="id" type="hidden">
+            <label for="phase-title">Título</label>
+            <input id="phase-title" name="title" maxlength="100" required>
+            <label for="phase-description">Descrição</label>
+            <textarea id="phase-description" name="description" rows="4" maxlength="300" required></textarea>
+            <button class="button button-primary" type="submit">Salvar etapa</button>
+            <button class="admin-text-button" id="cancel-edit" type="button" hidden>Cancelar edição</button>
+          </form>
+          <p class="small-note">A página pública continua aberta para leitura. Só uma conta autorizada pode salvar mudanças.</p>
+        </section>
+      </div>
+
+
     </section>
   </main>
 
