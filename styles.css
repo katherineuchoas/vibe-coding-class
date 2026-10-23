@@ -1251,50 +1251,38 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
   line-height: 1.7;
 }
 
-/* Small, playful cues that match the pastel home page. */
-.top-link {
-  display: inline-flex;
-  align-items: center;
-  gap: .55rem;
-  padding: .72rem 1rem;
-  border: 1px solid rgba(145, 183, 176, .22);
-  border-radius: 999px;
-  background: #e8f3f0;
-  transition: transform .2s ease, background-color .2s ease, box-shadow .2s ease;
+/* Keep the home close to its original look; make dynamic prompts feel like notes. */
+.admin-page .admin-visibility-toggle {
+  justify-content: flex-start;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  font-size: .95rem;
+  font-weight: 700;
 }
-.top-link span { display: inline-block; transition: transform .2s ease; }
-.top-link:hover {
-  color: var(--plum);
-  text-decoration: none;
-  background: #deeeea;
-  box-shadow: 0 5px 14px rgba(72, 105, 98, .12);
-  transform: translateY(-2px);
+.lesson-prompt-card {
+  position: relative;
+  margin: 1.25rem 0;
+  padding: 1.2rem 1.3rem;
+  border: 1px solid #eadcc6;
+  border-left: 4px solid #c6a27c;
+  border-radius: 14px 18px 14px 14px;
+  background: repeating-linear-gradient(
+    to bottom,
+    #fffaf0 0,
+    #fffaf0 1.65rem,
+    #eee4d2 1.68rem,
+    #fffaf0 1.72rem
+  );
+  box-shadow: 0 5px 14px rgba(109, 89, 65, .08);
 }
-.top-link:hover span { transform: translateY(3px); }
-.top-link:focus-visible, .phase-card:focus-visible {
-  outline: 3px solid #a982b4;
-  outline-offset: 4px;
+.lesson-prompt-title { margin: 0 0 .8rem; font: 600 1.08rem/1.4 Georgia, serif; }
+.lesson-prompt-card .lesson-prompt {
+  padding: .75rem .2rem;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .44);
+  line-height: 1.72;
 }
-.phase-card::before {
-  content: "✦";
-  position: absolute;
-  z-index: 1;
-  right: 1.2rem;
-  bottom: 1rem;
-  color: var(--plum);
-  font-size: 1.1rem;
-  opacity: 0;
-  transform: translateY(.3rem) rotate(-20deg);
-  transition: opacity .2s ease, transform .2s ease;
-  pointer-events: none;
-}
-.phase-card::after { transition: transform .25s ease; }
-.phase-card:hover::after { transform: scale(1.12); }
-.phase-card:hover::before { opacity: .65; transform: translateY(0) rotate(0); }
-.phase-icon { transition: transform .2s ease; }
-.phase-card:hover .phase-icon { transform: rotate(-8deg) scale(1.08); }
-@media (prefers-reduced-motion: reduce) {
-  .top-link, .top-link span, .phase-card::before, .phase-card::after, .phase-icon {
-    transition: none;
-  }
-}
+.lesson-prompt-card .copy-button { margin: .75rem 0 0; }
