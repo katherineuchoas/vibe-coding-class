@@ -6,6 +6,7 @@
   <meta name="theme-color" content="#fffaf7">
   <meta name="description" content="Área privada de edição das etapas do curso Vibe em Etapas.">
   <title>Área de edição — Vibe em Etapas</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="styles.css">
   <script src="supabase-config.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -22,14 +23,18 @@
   </header>
 
   <main class="admin-main section-wrap" id="admin-main">
-    <p class="eyebrow">ÁREA PRIVADA</p>
-    <h1>Cuide das etapas<br><span>com segurança.</span></h1>
-    <p class="hero-lede">Entre para organizar as etapas, criar aulas e editar cada parte com calma.</p>
+    <header class="admin-page-heading">
+      <p class="eyebrow">ÁREA DE EDIÇÃO</p>
+      <h1>Organize suas aulas <span>com calma.</span></h1>
+      <p class="hero-lede">Entre para editar as etapas do caminho e cada parte das aulas.</p>
+    </header>
 
     <p class="admin-message" id="admin-message" role="status" aria-live="polite"></p>
 
-    <section class="admin-panel" id="login-panel" aria-labelledby="login-title">
-      <h2 id="login-title">Entrar</h2>
+    <section class="admin-panel admin-auth-panel" id="login-panel" aria-labelledby="login-title">
+      <p class="admin-panel-kicker">ACESSO PROTEGIDO</p>
+      <h2 id="login-title">Entre para editar</h2>
+      <p class="admin-panel-intro">Use a conta autorizada no Supabase. Se você ainda não tem acesso, fale com a pessoa responsável pelo curso.</p>
       <form id="login-form">
         <label for="login-email">E-mail</label>
         <input id="login-email" name="email" type="email" autocomplete="username" required>
@@ -41,7 +46,7 @@
       <p class="small-note">O cadastro é feito pela pessoa responsável no painel do Supabase. Esta página não cria contas.</p>
     </section>
 
-    <section class="admin-panel" id="password-panel" aria-labelledby="password-title" hidden>
+    <section class="admin-panel admin-auth-panel" id="password-panel" aria-labelledby="password-title" hidden>
       <h2 id="password-title">Criar uma nova senha</h2>
       <form id="password-form">
         <label for="new-password">Nova senha</label>
@@ -50,7 +55,7 @@
       </form>
     </section>
 
-    <section class="admin-panel" id="denied-panel" aria-labelledby="denied-title" hidden>
+    <section class="admin-panel admin-auth-panel" id="denied-panel" aria-labelledby="denied-title" hidden>
       <h2 id="denied-title">Esta conta não pode editar</h2>
       <p>A entrada funcionou, mas esta conta não está na lista de pessoas autorizadas a mudar as etapas.</p>
       <button class="button button-dark" id="denied-sign-out" type="button">Sair</button>
@@ -66,13 +71,13 @@
       </div>
 
       <div class="admin-columns">
-        <section class="admin-panel" aria-labelledby="phase-list-title">
+        <section class="admin-panel admin-content-panel" id="phase-management" aria-labelledby="phase-list-title">
           <h3 id="phase-list-title">Etapas existentes</h3>
           <div class="admin-phase-list" id="phase-list"></div>
           <button class="button button-secondary" id="new-phase" type="button">Adicionar etapa</button>
         </section>
 
-        <section class="admin-panel" aria-labelledby="phase-form-title">
+        <section class="admin-panel admin-content-panel" aria-labelledby="phase-form-title">
           <h3 id="phase-form-title">Editar etapa</h3>
           <form id="phase-form">
             <input id="phase-id" name="id" type="hidden">
@@ -87,9 +92,11 @@
         </section>
       </div>
 
-      <section class="admin-panel course-editor" aria-labelledby="course-editor-title">
-        <h2 id="course-editor-title">Aulas e passos</h2>
-        <p>Edite as aulas existentes ou crie novas. Cada explicação, atividade e prompt fica em um passo separado.</p>
+      <section class="admin-panel course-editor" id="course-management" aria-labelledby="course-editor-title">
+        <div class="course-editor-heading">
+          <div><p class="admin-panel-kicker">CONTEÚDO DO CURSO</p><h2 id="course-editor-title">Aulas e passos</h2></div>
+          <p>Escolha uma aula para editar. Depois, organize cada explicação, atividade, dica ou prompt em passos separados.</p>
+        </div>
         <div class="admin-columns">
           <div>
             <div id="course-lesson-list" class="admin-phase-list"></div>
