@@ -199,8 +199,9 @@ function createCourseLesson(lesson, index) {
   const steps = (lesson.aula_passos || []).sort((a, b) => a.ordem - b.ordem);
   steps.forEach((step, stepIndex) => {
     const card = document.createElement("div");
-    card.className = step.tipo === "prompt" ? "prompt-card" : "info-card";
+    card.className = step.tipo === "prompt" ? "prompt-card lesson-prompt-card" : "info-card";
     const heading = document.createElement(step.tipo === "prompt" ? "h3" : "h3");
+    heading.className = step.tipo === "prompt" ? "lesson-prompt-title" : "";
     heading.textContent = `${stepIndex + 1}. ${step.titulo}`;
     const content = document.createElement(step.tipo === "prompt" ? "pre" : "p");
     content.className = step.tipo === "prompt" ? "lesson-prompt" : "lesson-step-content";
@@ -209,7 +210,7 @@ function createCourseLesson(lesson, index) {
     if (step.tipo === "prompt") {
       const copyButton = document.createElement("button");
       copyButton.type = "button";
-      copyButton.className = "admin-text-button";
+      copyButton.className = "copy-button";
       copyButton.textContent = "Copiar prompt";
       copyButton.addEventListener("click", async () => {
         try {
