@@ -341,3 +341,118 @@ set titulo = 'Mova os dados para o banco',
 • Feche e abra de novo para conferir se os dados continuam lá.'
 from public.aulas a
 where p.aula_id = a.id and a.slug = 'aula-2' and p.ordem = 4;
+
+-- Lesson 1: include the repository setup shown in the lesson and its companion guide.
+update public.aula_passos p
+set ordem = 18
+from public.aulas a
+where p.aula_id = a.id
+  and a.slug = 'aula-1'
+  and p.ordem = 17
+  and p.titulo = 'Planeje e mostre a primeira tela';
+
+insert into public.aula_passos (aula_id, tipo, titulo, conteudo, ordem)
+select a.id, 'explicacao', 'Prepare o GitHub antes de construir',
+$lesson$1. Crie ou abra sua conta no GitHub e um repositório para o projeto. Use um nome simples, sem espaços, e marque Add a README file.
+2. Escolha Público para compartilhar com facilidade. Se o projeto tiver dados pessoais ou confidenciais, escolha Privado.
+3. Na sua ferramenta de IA, conecte o GitHub, autorize o acesso e procure o repositório certo. No Claude Code, o material chama esse caminho de “Conectar ao GitHub” e “Selecionar repo”.
+4. Confira se a IA está trabalhando no repositório certo antes de pedir a primeira tela.
+
+Os nomes dos botões mudam de uma ferramenta para outra. Nunca coloque senhas ou chaves secretas no repositório.$lesson$, 17
+from public.aulas a
+where a.slug = 'aula-1'
+  and not exists (select 1 from public.aula_passos p where p.aula_id = a.id and p.ordem = 17);
+
+-- Lesson 2: add the three simple checks from the lesson slides.
+insert into public.aula_passos (aula_id, tipo, titulo, conteudo, ordem)
+select a.id, 'dica', 'A prova dos três',
+$lesson$1. Feche a página e abra de novo: os dados continuam lá?
+2. Abra em outro navegador ou aparelho: o conteúdo esperado aparece?
+3. Mude uma informação no Table Editor do Supabase, recarregue a página e veja se ela mudou.
+
+Use também o critério de pronto da sua trilha no Exercício 2. Se algo falhar, abra o F12 e copie a mensagem do Console.$lesson$, 10
+from public.aulas a
+where a.slug = 'aula-2'
+  and not exists (select 1 from public.aula_passos p where p.aula_id = a.id and p.ordem = 10);
+
+-- Lesson 3: include the impact-versus-effort choice, both learning paths,
+-- and the four questions that make a feature request clear.
+update public.aula_passos p
+set conteudo = 'Para expandir: liste as ideias e escolha uma pela matriz impacto × esforço.
+
+• Alto impacto e pouco esforço: faça agora (ex.: botão de WhatsApp ou ordenar tarefas por prazo).
+• Alto impacto e muito esforço: planeje com cuidado (ex.: área de administração ou PDF).
+• Pouco impacto e pouco esforço: deixe para quando sobrar tempo (ex.: trocar uma cor).
+• Pouco impacto e muito esforço: deixe para depois (ex.: criar um app de celular).
+
+Antes de pedir a função, responda: o que ela faz? Quais dados usa? Qual caminho a pessoa percorre na tela? O que não pode mudar?
+
+Depois peça uma revisão do plano, construa uma função por vez e teste a nova e as antigas.'
+from public.aulas a
+where p.aula_id = a.id and a.slug = 'aula-3' and p.ordem = 1;
+
+update public.aula_passos p
+set ordem = 5
+from public.aulas a
+where p.aula_id = a.id and a.slug = 'aula-3' and p.ordem = 4;
+
+update public.aula_passos p
+set ordem = 7,
+    conteudo = 'Duração sugerida: 40 min.
+
+• Escolha a estrada: acrescentar uma função ou investigar um erro.
+• Escreva ou revise um plano curto.
+• Construa uma coisa por vez.
+• Confira os dados, abra as telas antigas e teste a função nova.
+• Abra o Console e veja se apareceu algum erro novo.
+
+Ainda não coloque login nesta fase. Se uma mudança quebrar outra parte, volte aos passos de investigação de bugs.'
+from public.aulas a
+where p.aula_id = a.id and a.slug = 'aula-3' and p.ordem = 5;
+
+insert into public.aula_passos (aula_id, tipo, titulo, conteudo, ordem)
+select a.id, 'prompt', 'Prompt para pedir uma função nova',
+$lesson$Leia meu PLANO.md. Vamos implementar SOMENTE a Fase 3: [descreva uma função].
+
+O que a função deve fazer: [explique].
+Quais dados ela usa: [liste].
+O que a pessoa faz na tela: [conte o caminho].
+O que já funciona e não pode mudar: [liste].
+
+Se algo estiver faltando, faça perguntas antes de mudar o projeto. Construa só essa função, seguindo o plano. Não adicione login nesta fase.
+
+Pronto quando: [descreva um teste simples].$lesson$, 4
+from public.aulas a
+where a.slug = 'aula-3'
+  and not exists (select 1 from public.aula_passos p where p.aula_id = a.id and p.ordem = 4);
+
+insert into public.aula_passos (aula_id, tipo, titulo, conteudo, ordem)
+select a.id, 'explicacao', 'Ideias de melhoria para cada trilha',
+$lesson$Presença digital: crie uma área /admin para editar o perfil e os blocos, reordenar e ver como ficam no celular. Pronto quando: adiciono um link e um bloco sem abrir o código.
+
+Produtividade: ordene as tarefas do dia com uma explicação e um resumo que ajude sem cobrar. Pronto quando: pela manhã vejo as tarefas organizadas.
+
+Recolocação: adapte o currículo reorganizando apenas o que já existe — nunca invente informações. Compare as versões e permita gerar um PDF. Pronto quando: gero, comparo, aprovo e baixo o arquivo.
+
+Projeto próprio: escolha o diferencial descrito no seu plano. Pronto quando: o teste definido no plano funciona.
+
+Nesta etapa, ainda sem login. Escolha menos raciocínio e descreva com clareza como a tela deve ficar.$lesson$, 6
+from public.aulas a
+where a.slug = 'aula-3'
+  and not exists (select 1 from public.aula_passos p where p.aula_id = a.id and p.ordem = 6);
+
+-- Lesson 4: include the final manual checks from the lesson.
+update public.aula_passos p
+set conteudo = 'Duração sugerida: 40 min.
+
+• Marque cada tela como pública ou privada.
+• Revise o plano e construa só a Fase 4.
+• Crie uma conta de teste no Supabase.
+• Teste sem login e com e-mail ou senha errados.
+• Entre com uma segunda conta e confirme que ela não vê os dados da primeira.
+• Entre de novo com sua conta e confira se seus dados continuam lá.
+• Confira se as partes que já funcionavam ainda funcionam.
+
+Na trilha de presença digital, a página pública continua aberta; sem login, a área de edição fica bloqueada.'
+from public.aulas a
+where p.aula_id = a.id and a.slug = 'aula-4' and p.ordem = 15;
