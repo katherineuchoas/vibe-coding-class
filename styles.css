@@ -60,21 +60,25 @@ h1 span { color: #a85f76; }
   border-radius: 50%;
 }
 .hero-orbit::before {
-  inset: 12% -34%;
+  inset: 17% -42%;
   transform: rotate(-28deg);
 }
 .hero-orbit::after {
-  inset: -22% 28%;
+  inset: -36% 18%;
   border-color: rgba(181, 119, 130, .34);
   transform: rotate(38deg);
 }
 .hero-orbit-ball {
   position: absolute;
   z-index: 2;
-  inset: 0;
+  top: 50%;
+  left: 50%;
+  width: 4rem;
+  height: 4rem;
   border-radius: 50%;
   background: #fff9d6;
   box-shadow: 0 5px 18px rgba(174, 150, 92, .08);
+  transform: translate(-50%, -50%);
 }
 .hero-electron {
   position: absolute;
@@ -85,7 +89,7 @@ h1 span { color: #a85f76; }
   height: .38rem;
   border-radius: 50%;
   background: #a8736c;
-  transform: translate(-50%, -50%) rotate(0deg) translateX(5.2rem);
+  transform: translate(-50%, -50%) rotate(0deg) translateX(3.2rem);
 }
 .hero-orbit:hover::before,
 .hero-orbit:focus-visible::before {
@@ -97,14 +101,14 @@ h1 span { color: #a85f76; }
 }
 .hero-orbit:hover .hero-electron,
 .hero-orbit:focus-visible .hero-electron {
-  animation: electron-orbit 9s linear infinite;
+  animation: electron-orbit 12s linear infinite;
 }
 .hero-orbit:focus-visible { outline: 2px solid #a8736c; outline-offset: 4px; }
 @keyframes orbit-spin {
   to { rotate: 360deg; }
 }
 @keyframes electron-orbit {
-  to { transform: translate(-50%, -50%) rotate(360deg) translateX(5.2rem); }
+  to { transform: translate(-50%, -50%) rotate(360deg) translateX(3.2rem); }
 }
 @media (prefers-reduced-motion: reduce) {
   .hero-orbit:hover::before,
