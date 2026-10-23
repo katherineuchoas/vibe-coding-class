@@ -903,3 +903,60 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
   .summary-hint,
   .summary-hint::after { transition: none; }
 }
+
+
+/* A friendly, low-key cue for the first step. */
+.hero-start {
+  position: relative;
+  gap: .8rem;
+  box-shadow: 0 8px 18px rgba(74, 50, 81, .14);
+  transition: transform .2s ease, box-shadow .2s ease, background-color .2s ease;
+}
+.hero-start::after {
+  content: "✦";
+  position: absolute;
+  top: .18rem;
+  right: 2.15rem;
+  color: #fff0b7;
+  font-size: .8rem;
+  opacity: 0;
+  transform: scale(.45) rotate(-25deg);
+  transition: opacity .2s ease, transform .25s ease;
+  pointer-events: none;
+}
+.hero-start > span {
+  display: inline-grid;
+  width: 1.65rem;
+  height: 1.65rem;
+  place-items: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, .14);
+  transition: transform .2s ease, background-color .2s ease;
+}
+.hero-start:hover,
+.hero-start:focus-visible {
+  background: #765783;
+  box-shadow: 0 12px 24px rgba(74, 50, 81, .2);
+  transform: translateY(-3px) rotate(-.5deg);
+}
+.hero-start:hover > span,
+.hero-start:focus-visible > span {
+  background: rgba(255, 255, 255, .23);
+  transform: translateX(4px);
+}
+.hero-start:hover::after,
+.hero-start:focus-visible::after {
+  opacity: 1;
+  transform: scale(1) rotate(0);
+}
+.hero-start:active { transform: translateY(-1px) scale(.98); }
+@media (prefers-reduced-motion: reduce) {
+  .hero-start,
+  .hero-start::after,
+  .hero-start > span { transition: none; }
+  .hero-start:hover,
+  .hero-start:focus-visible,
+  .hero-start:active { transform: none; }
+  .hero-start:hover > span,
+  .hero-start:focus-visible > span { transform: none; }
+}
