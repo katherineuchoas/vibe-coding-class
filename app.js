@@ -116,7 +116,7 @@ async function loadPhases() {
     }
 
     renderPhases(rows);
-    setConnectionStatus(`${rows.length} fase(s) carregada(s) do Supabase.`, "success");
+    setConnectionStatus(`${rows.length} ${rows.length === 1 ? "passo carregado" : "passos carregados"} do Supabase.`, "success");
   } catch {
     setConnectionStatus("Não consegui conversar com o Supabase. Confira sua conexão e o URL do projeto.", "error");
   }
@@ -131,7 +131,7 @@ function createCourseLesson(lesson, index) {
   const summary = document.createElement("summary");
   const tag = document.createElement("span");
   tag.className = "lesson-tag";
-  tag.textContent = `AULA ${String(lesson.ordem).padStart(2, "0")}`;
+  tag.textContent = `PASSO ${String(lesson.ordem).padStart(2, "0")}`;
   const title = document.createElement("span");
   title.className = "summary-title";
   title.textContent = lesson.titulo;
@@ -215,7 +215,7 @@ async function loadCourseLessons() {
       });
     });
   } catch {
-    // Se o Supabase estiver indisponível, o site mantém as aulas locais.
+    // Se o Supabase estiver indisponível, o site mantém os passos locais.
   }
 }
 
