@@ -1,6 +1,5 @@
 const config = window.VIBE_SUPABASE_CONFIG;
 const supabaseLibrary = window.supabase;
-const message = document.querySelector("#admin-message");
 const loginPanel = document.querySelector("#login-panel");
 const passwordPanel = document.querySelector("#password-panel");
 const deniedPanel = document.querySelector("#denied-panel");
@@ -52,10 +51,36 @@ let courseSteps = [];
 
 let passwordRecoveryActive = window.location.hash.includes("type=recovery");
 
-function showMessage(text, state = "") {
-  message.textContent = text;
-  message.dataset.state = state;
+const toast = document.querySelector("#toast");
+const toastText = toast.querySelector(".toast-text");
+const toastIcon = toast.querySelector(".toast-icon");
+let toastTimer;
+
+function hideToast() {
+  window.clearTimeout(toastTimer);
+  toast.classList.remove("show");
+  toast.hidden = true;
 }
+
+function showMessage(text, state = "info", duration) {
+  if (!text) {
+    hideToast();
+    return;
+  }
+
+  const kind = state || "info";
+  toastText.textContent = text;
+  toast.dataset.state = kind;
+  toastIcon.textContent = kind === "error" ? "!" : kind === "success" ? "✓" : "i";
+  toast.setAttribute("role", kind === "error" ? "alert" : "status");
+  toast.setAttribute("aria-live", kind === "error" ? "assertive" : "polite");
+  toast.hidden = false;
+  window.requestAnimationFrame(() => toast.classList.add("show"));
+  window.clearTimeout(toastTimer);
+  toastTimer = window.setTimeout(hideToast, duration || (kind === "error" ? 7000 : 4200));
+}
+
+toast.querySelector(".toast-close").addEventListener("click", hideToast);
 
 function showPanel(panel) {
   [loginPanel, passwordPanel, deniedPanel, editorPanel].forEach((item) => {
