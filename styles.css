@@ -1234,3 +1234,67 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
   }
   .admin-page .admin-course-edit { grid-column: 1 / -1; }
 }
+
+
+/* Give admin lesson titles and summaries a clearer separation. */
+.admin-page .admin-course-copy {
+  display: grid;
+  gap: .8rem;
+}
+.admin-page .admin-course-copy strong {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+.admin-page .admin-course-copy p {
+  margin: 0;
+  line-height: 1.7;
+}
+
+/* Small, playful cues that match the pastel home page. */
+.top-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .55rem;
+  padding: .72rem 1rem;
+  border: 1px solid rgba(145, 183, 176, .22);
+  border-radius: 999px;
+  background: #e8f3f0;
+  transition: transform .2s ease, background-color .2s ease, box-shadow .2s ease;
+}
+.top-link span { display: inline-block; transition: transform .2s ease; }
+.top-link:hover {
+  color: var(--plum);
+  text-decoration: none;
+  background: #deeeea;
+  box-shadow: 0 5px 14px rgba(72, 105, 98, .12);
+  transform: translateY(-2px);
+}
+.top-link:hover span { transform: translateY(3px); }
+.top-link:focus-visible, .phase-card:focus-visible {
+  outline: 3px solid #a982b4;
+  outline-offset: 4px;
+}
+.phase-card::before {
+  content: "✦";
+  position: absolute;
+  z-index: 1;
+  right: 1.2rem;
+  bottom: 1rem;
+  color: var(--plum);
+  font-size: 1.1rem;
+  opacity: 0;
+  transform: translateY(.3rem) rotate(-20deg);
+  transition: opacity .2s ease, transform .2s ease;
+  pointer-events: none;
+}
+.phase-card::after { transition: transform .25s ease; }
+.phase-card:hover::after { transform: scale(1.12); }
+.phase-card:hover::before { opacity: .65; transform: translateY(0) rotate(0); }
+.phase-icon { transition: transform .2s ease; }
+.phase-card:hover .phase-icon { transform: rotate(-8deg) scale(1.08); }
+@media (prefers-reduced-motion: reduce) {
+  .top-link, .top-link span, .phase-card::before, .phase-card::after, .phase-icon {
+    transition: none;
+  }
+}
