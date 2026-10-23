@@ -102,59 +102,71 @@ function renderPhases(rows) {
   grid.replaceChildren(...cards);
 }
 
+let sharedSupabaseClient;
+
+function getSupabaseClient() {
+  if (sharedSupabaseClient) return sharedSupabaseClient;
+  const config = window.VIBE_SUPABASE_CONFIG;
+  if (!config?.url || !config?.publishableKey || !window.supabase?.createClient) return null;
+  try {
+    sharedSupabaseClient = window.supabase.createClient(config.url, config.publishableKey);
+    return sharedSupabaseClient;
+  } catch (error) {
+    console.error("[Vibe em Etapas] Configuração do Supabase inválida:", error);
+    return null;
+  }
+}
+
+function integrationErrorMessage(error) {
+  const message = error?.message || "";
+  if (/invalid api key/i.test(message)) {
+    return "O Supabase recusou a chave pública. Confira a chave Publishable e o URL do mesmo projeto.";
+  }
+  if (error?.status === 401 || error?.status === 403) {
+    return "O Supabase bloqueou o acesso. Confira as permissões e regras RLS.";
+  }
+  return "Não consegui carregar os dados do Supabase. Confira o Console (F12).";
+}
+
 async function loadPhases() {
   const config = window.VIBE_SUPABASE_CONFIG;
-  if (!config?.url || !config?.publishableKey) {
-    setConnectionStatus("Configure o URL e a chave pública em supabase-config.js.", "empty");
-    return;
-  }
-
-  let projectUrl;
-  try {
-    projectUrl = new URL(config.url);
-  } catch {
-    setConnectionStatus("O URL configurado para o Supabase não é válido.", "error");
-    return;
-  }
-  if (projectUrl.protocol !== "https:" || !projectUrl.hostname.endsWith(".supabase.co")) {
-    setConnectionStatus("Use o URL HTTPS do projeto Supabase configurado.", "error");
+  if (!config?.url || !config?.publishableKey || !window.supabase?.createClient) {
+    setConnectionStatus("Confira o URL, a chave pública e a biblioteca do Supabase.", "error");
     return;
   }
 
   setConnectionStatus("Carregando as fases do Supabase…", "loading");
-  const endpoint = new URL("/rest/v1/fases", projectUrl.origin);
-  endpoint.search = new URLSearchParams({ select: "id,titulo,descricao", order: "id.asc" });
+  const client = getSupabaseClient();
+  if (!client) {
+    setConnectionStatus("Não consegui iniciar a conexão com o Supabase.", "error");
+    return;
+  }
 
   try {
-    const headers = { apikey: config.publishableKey };
-    if (!config.publishableKey.startsWith("sb_publishable_")) {
-      headers.Authorization = `Bearer ${config.publishableKey}`;
-    }
-    const response = await fetch(endpoint, { headers });
-    if (!response.ok) {
-      setConnectionStatus(
-        response.status === 401 || response.status === 403
-          ? "O Supabase recusou o acesso. Confira se o URL e a chave pública são do mesmo projeto."
-          : `O Supabase respondeu ${response.status}. Confira a mensagem no Console (F12).`,
-        "error"
-      );
+    const { data: rows, error } = await client
+      .from("fases")
+      .select("id,titulo,descricao")
+      .order("id", { ascending: true });
+
+    if (error) {
+      console.error("[Vibe em Etapas] Falha ao carregar fases:", error);
+      setConnectionStatus(integrationErrorMessage(error), "error");
       return;
     }
-
-    const rows = await response.json();
     if (!Array.isArray(rows)) {
       setConnectionStatus("A resposta do Supabase veio em um formato inesperado.", "error");
       return;
     }
     if (rows.length === 0) {
-      setConnectionStatus("A consulta funcionou, mas não encontrou fases. Confira se a migration foi aplicada ao projeto configurado e se public.fases tem linhas.", "empty");
+      setConnectionStatus("A conexão funcionou, mas não há fases cadastradas.", "empty");
       return;
     }
 
     renderPhases(rows);
-    setConnectionStatus(`${rows.length} ${rows.length === 1 ? "passo carregado" : "passos carregados"} do Supabase.`, "success");
-  } catch {
-    setConnectionStatus("Não consegui conversar com o Supabase. Confira sua conexão e o URL do projeto.", "error");
+    setConnectionStatus(`${rows.length} ${rows.length === 1 ? "etapa carregada" : "etapas carregadas"} do Supabase.`, "success");
+  } catch (error) {
+    console.error("[Vibe em Etapas] Erro ao carregar fases:", error);
+    setConnectionStatus(integrationErrorMessage(error), "error");
   }
 }
 
@@ -217,33 +229,24 @@ function createCourseLesson(lesson, index) {
 }
 
 async function loadCourseLessons() {
-  const config = window.VIBE_SUPABASE_CONFIG;
-  if (!config?.url || !config?.publishableKey) return;
-  const headers = { apikey: config.publishableKey };
-  if (!config.publishableKey.startsWith("sb_publishable_")) {
-    headers.Authorization = `Bearer ${config.publishableKey}`;
+  const client = getSupabaseClient();
+  if (!client) {
+    showMessage("Confira a configuração e a biblioteca do Supabase.", "error");
+    return;
   }
+
   try {
-    const lessonsUrl = new URL("/rest/v1/aulas", config.url);
-    lessonsUrl.search = new URLSearchParams({
-      select: "id,slug,titulo,resumo,ordem,cor,aula_passos(id,tipo,titulo,conteudo,ordem)",
-      publicada: "eq.true",
-      order: "ordem.asc"
-    });
-    const response = await fetch(lessonsUrl, { headers });
-    if (!response.ok) {
-      const details = await response.json().catch(() => null);
-      console.error("[Vibe em Etapas] Falha ao carregar passos do Supabase:", response.status, details);
-      const message = response.status === 401
-        ? "O Supabase recusou a chave pública. Confira se ela pertence ao projeto configurado."
-        : response.status === 403
-          ? "O Supabase bloqueou a leitura. Confira as regras de acesso público (RLS)."
-          : `Não consegui carregar os passos (erro ${response.status}). Confira o Console (F12).`;
-      showMessage(message, "error");
+    const { data: rows, error } = await client
+      .from("aulas")
+      .select("id,slug,titulo,resumo,ordem,cor,aula_passos(id,tipo,titulo,conteudo,ordem)")
+      .eq("publicada", true)
+      .order("ordem", { ascending: true });
+
+    if (error) {
+      console.error("[Vibe em Etapas] Falha ao carregar passos:", error);
+      showMessage(integrationErrorMessage(error), "error");
       return;
     }
-
-    const rows = await response.json();
     if (!Array.isArray(rows)) {
       showMessage("A lista de passos veio em um formato inesperado.", "error");
       return;
@@ -265,8 +268,8 @@ async function loadCourseLessons() {
 
     bindLessonDisclosures();
   } catch (error) {
-    console.error("[Vibe em Etapas] Erro de conexão ao buscar passos:", error);
-    showMessage("Não consegui buscar os passos. Confira sua conexão e o Console (F12).", "error");
+    console.error("[Vibe em Etapas] Erro ao buscar passos:", error);
+    showMessage(integrationErrorMessage(error), "error");
   }
 }
 
