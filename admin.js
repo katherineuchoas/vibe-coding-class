@@ -15,6 +15,11 @@ const phaseDescription = document.querySelector("#phase-description");
 const cancelEdit = document.querySelector("#cancel-edit");
 const headerEmail = document.querySelector("#admin-header-email");
 const returnLink = document.querySelector("#admin-return-link");
+const adminSession = document.querySelector("#admin-session");
+const courseManagement = document.querySelector("#course-management");
+const phaseWorkspace = document.querySelector("#phase-workspace");
+const modeLessons = document.querySelector("#mode-lessons");
+const modePhases = document.querySelector("#mode-phases");
 let client;
 let phases = [];
 const courseLessonList = document.querySelector("#course-lesson-list");
@@ -56,8 +61,17 @@ function showPanel(panel) {
     item.hidden = item !== panel;
   });
   const isEditor = panel === editorPanel;
-  headerEmail.hidden = !isEditor;
+  adminSession.hidden = !isEditor;
   returnLink.hidden = isEditor;
+  if (isEditor) setAdminMode("lessons");
+}
+
+function setAdminMode(mode) {
+  const editingLessons = mode === "lessons";
+  courseManagement.hidden = !editingLessons;
+  phaseWorkspace.hidden = editingLessons;
+  modeLessons.setAttribute("aria-pressed", String(editingLessons));
+  modePhases.setAttribute("aria-pressed", String(!editingLessons));
 }
 
 function startNewPhase() {
@@ -120,7 +134,7 @@ async function loadPhases() {
 
   phases = data || [];
   renderPhaseList();
-  showMessage("Etapas carregadas.", "success");
+  showMessage("");
 }
 
 function renderCourseLessons() {
@@ -466,6 +480,8 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
     await loadCourseSteps();
   });
 
+  modeLessons.addEventListener("click", () => setAdminMode("lessons"));
+  modePhases.addEventListener("click", () => setAdminMode("phases"));
   document.querySelector("#new-phase").addEventListener("click", startNewPhase);
   document.querySelector("#cancel-edit").addEventListener("click", startNewPhase);
   document.querySelector("#sign-out").addEventListener("click", signOut);
