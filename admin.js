@@ -142,7 +142,7 @@ function renderCourseLessons() {
   if (!courseLessons.length) {
     const empty = document.createElement("p");
     empty.className = "small-note";
-    empty.textContent = "Ainda não há aulas novas.";
+    empty.textContent = "Ainda não há passos novos.";
     courseLessonList.append(empty);
     return;
   }
@@ -159,7 +159,7 @@ function renderCourseLessons() {
     const edit = document.createElement("button");
     edit.className = "admin-text-button";
     edit.type = "button";
-    edit.textContent = "Abrir aula";
+    edit.textContent = "Abrir passo";
     edit.addEventListener("click", () => selectCourseLesson(lesson));
     const visibility = document.createElement("span");
     visibility.className = "small-note";
@@ -176,7 +176,7 @@ async function loadCourseLessons() {
     .select("id,titulo,resumo,ordem,publicada")
     .order("ordem", { ascending: true });
   if (error) {
-    showMessage("Não consegui carregar as aulas novas. Aplique a migration da Fase 5.", "error");
+    showMessage("Não consegui carregar os passos novos. Aplique a migration da Fase 5.", "error");
     return;
   }
   courseLessons = data || [];
@@ -192,7 +192,7 @@ async function selectCourseLesson(lesson) {
   courseBrowser.hidden = true;
   courseDetailView.hidden = false;
   courseDetailTitle.textContent = lesson.titulo;
-  courseDetailSummary.textContent = lesson.resumo || "Esta aula ainda não tem um resumo.";
+  courseDetailSummary.textContent = lesson.resumo || "Este passo ainda não tem um resumo.";
   courseLessonId.value = lesson.id;
   courseLessonTitle.value = lesson.titulo;
   courseLessonSummary.value = lesson.resumo || "";
@@ -208,7 +208,7 @@ function startNewCourseLesson() {
   selectedCourseLessonId = null;
   courseBrowser.hidden = true;
   courseDetailView.hidden = false;
-  courseDetailTitle.textContent = "Nova aula";
+  courseDetailTitle.textContent = "Novo passo";
   courseDetailSummary.textContent = "Preencha os dados e salve para começar a adicionar os passos.";
   courseLessonForm.reset();
   courseLessonId.value = "";
@@ -253,7 +253,7 @@ function renderCourseSteps() {
   if (!courseSteps.length) {
     const empty = document.createElement("p");
     empty.className = "small-note";
-    empty.textContent = "Esta aula ainda não tem passos. Crie o primeiro abaixo.";
+    empty.textContent = "Este passo ainda não tem blocos de conteúdo. Crie o primeiro abaixo.";
     courseStepList.append(empty);
     return;
   }
@@ -303,7 +303,7 @@ async function loadCourseSteps() {
     .eq("aula_id", selectedCourseLessonId)
     .order("ordem", { ascending: true });
   if (error) {
-    showMessage("Não consegui carregar os passos desta aula.", "error");
+    showMessage("Não consegui carregar os blocos deste passo.", "error");
     return;
   }
   courseSteps = data || [];
@@ -444,12 +444,12 @@ if (!config?.url || !config?.publishableKey || !supabaseLibrary?.createClient) {
       ? await client.from("aulas").update(values).eq("id", courseLessonId.value)
       : await client.from("aulas").insert(values).select("id").single();
     if (result.error) {
-      showMessage("Não consegui salvar a aula. Confira a conexão e as regras de acesso.", "error");
+      showMessage("Não consegui salvar o passo. Confira a conexão e as regras de acesso.", "error");
       return;
     }
     if (!courseLessonId.value) selectedCourseLessonId = result.data.id;
     courseLessonDirty = false;
-    showMessage("Aula salva.", "success");
+    showMessage("Passo salvo.", "success");
     await loadCourseLessons();
   });
 
