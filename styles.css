@@ -1125,3 +1125,49 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
     gap: .5rem;
   }
 }
+
+
+/* Give the learning pages a calmer, more readable rhythm. */
+.hero { padding-block: 6rem 5.5rem; }
+.roadmap { padding-block: 3.5rem 5rem; }
+.phase-grid { gap: 1.35rem; }
+.learning { padding-block: 2rem 5rem; }
+.learning > .section-heading { margin-bottom: 2.5rem; }
+.learning > article.lesson { margin-block: 1.5rem; }
+.lesson-body { display: grid; gap: 1.35rem; padding: 0 1.5rem 1.6rem; }
+.lesson-body > * { margin-block: 0; }
+.two-columns, .track-grid, .glossary-grid { gap: 1.15rem; }
+.info-card, .prompt-card, .track-card { padding: 1.35rem; }
+
+/* Separate admin sections, panels, and controls instead of crowding them. */
+.admin-main { padding-block: 4.5rem; }
+.admin-page-heading { margin-bottom: 3rem; }
+.admin-workspace { display: grid; gap: 1.75rem; }
+.admin-workspace-heading { margin-bottom: .25rem; }
+.admin-mode-switch { margin-bottom: .5rem; }
+.admin-panel { padding: 1.6rem; }
+.admin-columns, .course-detail-grid { gap: 1.5rem; }
+.admin-phase-list { gap: 1rem; margin-bottom: 1.5rem; }
+.admin-panel form { gap: .8rem; }
+.admin-panel label { margin-top: .65rem; }
+.admin-page .course-editor { padding: 1.8rem; }
+.admin-page .course-editor-heading { margin-bottom: 1.75rem; }
+.admin-page .course-browser,
+.admin-page .course-detail-view { padding-top: 1.5rem; }
+.admin-page .course-browser-heading,
+.admin-page .course-detail-heading { margin-bottom: 1.5rem; }
+.admin-page #course-lesson-list { gap: 1rem; }
+.admin-page #course-lesson-list .admin-phase-item { padding: 1.2rem 1.35rem; }
+.lesson-step-editor { padding-top: 1.75rem; }
+.course-form-actions { gap: .8rem; }
+
+@media (max-width: 700px) {
+  .hero { padding-block: 4rem 3.5rem; }
+  .roadmap { padding-block: 2.5rem 3.5rem; }
+  .learning { padding-block: 1.5rem 3.5rem; }
+  .lesson-body { padding-inline: 1rem; }
+  .admin-main { padding-block: 2.5rem; }
+  .admin-page-heading { margin-bottom: 2rem; }
+  .admin-panel, .admin-page .course-editor { padding: 1.15rem; }
+  .admin-columns, .course-detail-grid { gap: 1rem; }
+}
