@@ -1312,3 +1312,33 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
   .lesson .prompt-heading { align-items: flex-start; }
   .lesson .copy-button { margin-left: auto; }
 }
+
+/* Match the desktop learning cards to the mobile pastel notebook style. */
+@media (min-width: 801px) {
+  .learning .glossary-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+  .learning .glossary-grid p {
+    padding: 1rem 1.1rem;
+    font-size: .95rem;
+    line-height: 1.6;
+  }
+  .learning .prompt-card {
+    width: min(100%, 58rem);
+    justify-self: center;
+    padding: 0;
+    border: 1px solid #ecd9d0;
+    box-shadow: 0 10px 24px rgba(94, 67, 84, .07);
+  }
+  .learning .prompt-heading {
+    padding: 1.2rem 1.4rem .75rem;
+  }
+  .learning .prompt-heading h3 {
+    font-size: 1.2rem;
+  }
+  .learning .prompt-card pre {
+    padding: .75rem 1.4rem 1.4rem;
+    line-height: 1.7;
+  }
+}
