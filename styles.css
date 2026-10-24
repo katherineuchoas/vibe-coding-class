@@ -1293,3 +1293,22 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
   background: none;
   box-shadow: none;
 }
+
+
+/* Preserve the colorful notebook feel for content rendered from Supabase. */
+.lesson .lesson-body > .info-card,
+.lesson .lesson-body > .prompt-card,
+.lesson .lesson-body > .exercise-box,
+.lesson .lesson-body > .callout { margin: 0; }
+.lesson-step-content { margin: .65rem 0 0; white-space: pre-line; }
+.lesson-peach .info-card { background: #fff2eb; }
+.lesson-blue .info-card { background: #edf6f7; }
+.lesson-lilac .info-card { background: #f3edf8; }
+.lesson-green .info-card { background: #f0f5eb; }
+.lesson .prompt-card { border: 1px solid #e4d8ea; box-shadow: 0 4px 12px rgba(67,52,67,.05); }
+.lesson .prompt-heading { flex-wrap: wrap; }
+.lesson .copy-button { min-height: 2.4rem; }
+@media (max-width: 560px) {
+  .lesson .prompt-heading { align-items: flex-start; }
+  .lesson .copy-button { margin-left: auto; }
+}
