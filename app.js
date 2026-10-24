@@ -174,6 +174,7 @@ function createCourseLesson(lesson, index) {
   const article = document.createElement("article");
   article.className = `lesson lesson-${lesson.cor || ["peach", "blue", "lilac", "green"][index % 4]}`;
   article.id = lesson.slug || `aula-extra-${lesson.id}`;
+
   const details = document.createElement("details");
   details.open = false;
   const summary = document.createElement("summary");
@@ -185,7 +186,7 @@ function createCourseLesson(lesson, index) {
   title.textContent = lesson.titulo;
   const hint = document.createElement("span");
   hint.className = "summary-hint";
-  hint.textContent = details.open ? "Fechar passo" : "Abrir passo";
+  hint.textContent = "Abrir passo";
   summary.append(tag, title, hint);
 
   const body = document.createElement("div");
@@ -196,21 +197,27 @@ function createCourseLesson(lesson, index) {
     intro.textContent = lesson.resumo;
     body.append(intro);
   }
-  const steps = (lesson.aula_passos || []).sort((a, b) => a.ordem - b.ordem);
-  steps.forEach((step, stepIndex) => {
+
+  const steps = [...(lesson.aula_passos || [])].sort((a, b) => a.ordem - b.ordem);
+  steps.forEach((step) => {
     const card = document.createElement("div");
-    card.className = step.tipo === "prompt" ? "prompt-card" : "info-card";
-    const heading = document.createElement(step.tipo === "prompt" ? "h3" : "h3");
-    heading.textContent = `${stepIndex + 1}. ${step.titulo}`;
-    const content = document.createElement(step.tipo === "prompt" ? "pre" : "p");
-    content.className = step.tipo === "prompt" ? "lesson-prompt" : "lesson-step-content";
-    content.textContent = step.conteudo;
-    card.append(heading, content);
+    const heading = document.createElement("h3");
+    heading.textContent = step.titulo;
+
     if (step.tipo === "prompt") {
+      card.className = "prompt-card";
+      const header = document.createElement("div");
+      header.className = "prompt-heading";
+      const spark = document.createElement("span");
+      spark.setAttribute("aria-hidden", "true");
+      spark.textContent = "✦";
+      const promptTitle = document.createElement("h3");
+      promptTitle.textContent = step.titulo;
       const copyButton = document.createElement("button");
       copyButton.type = "button";
-      copyButton.className = "admin-text-button";
+      copyButton.className = "copy-button";
       copyButton.textContent = "Copiar prompt";
+      copyButton.setAttribute("aria-label", `Copiar prompt: ${step.titulo}`);
       copyButton.addEventListener("click", async () => {
         try {
           await copyText(step.conteudo);
@@ -219,15 +226,37 @@ function createCourseLesson(lesson, index) {
           showMessage("Selecione o texto e copie.");
         }
       });
-      card.append(copyButton);
+      header.append(spark, promptTitle, copyButton);
+      const content = document.createElement("pre");
+      content.className = "lesson-prompt";
+      content.textContent = step.conteudo;
+      card.append(header, content);
+    } else {
+      const content = document.createElement("div");
+      content.className = "lesson-step-content";
+      content.textContent = step.conteudo;
+      if (step.tipo === "atividade") {
+        card.className = "exercise-box";
+        const label = document.createElement("span");
+        label.className = "exercise-label";
+        label.textContent = "ATIVIDADE";
+        card.append(label, heading, content);
+      } else if (step.tipo === "dica") {
+        card.className = "callout";
+        heading.className = "subheading";
+        card.append(heading, content);
+      } else {
+        card.className = "info-card";
+        card.append(heading, content);
+      }
     }
     body.append(card);
   });
+
   details.append(summary, body);
   article.append(details);
   return article;
 }
-
 async function loadCourseLessons() {
   const client = getSupabaseClient();
   if (!client) {
