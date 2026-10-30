@@ -348,6 +348,33 @@ const helpAliases = {
   bug: ["erro", "quebrou", "parou de funcionar", "problema"]
 };
 
+const helpGeneralConcepts = [
+  { terms: ["html"], answer: "HTML é a estrutura da página: organiza títulos, textos, botões e campos. Ao criar uma tela com IA, você pode descrever quais partes precisam aparecer e como a pessoa vai usá-las." },
+  { terms: ["css"], answer: "CSS define a aparência da página, como cores, tamanhos, espaços e adaptação para celular. No seu projeto, descreva o visual que quer e peça mudanças em partes pequenas." },
+  { terms: ["javascript", "js"], answer: "JavaScript dá comportamento à página: por exemplo, o que acontece quando alguém clica, envia um formulário ou salva algo. No vibe coding, você pode explicar o resultado esperado sem precisar escrever o código." },
+  { terms: ["variavel", "variáveis"], answer: "Uma variável é um nome que o programa usa para guardar um valor enquanto trabalha, como o título de uma tarefa. No projeto, pense nela como uma etiqueta para uma informação." },
+  { terms: ["funcao", "funcoes"], answer: "Uma função é um conjunto de instruções que o projeto pode executar quando necessário, como validar um formulário ao clicar em Enviar. Você pode explicar à IA o que deve acontecer e em que momento." },
+  { terms: ["api"], answer: "Uma API é uma forma combinada de um sistema pedir ou oferecer informações a outro. No projeto, pense nela como um balcão de atendimento entre a página e um serviço, como um banco de dados." },
+  { terms: ["frontend"], answer: "Frontend é a parte do projeto que a pessoa vê e usa: telas, textos, botões e formulários. No site, isso corresponde à interface." },
+  { terms: ["backend"], answer: "Backend é a parte que trabalha nos bastidores, cuidando de dados e regras que não ficam visíveis na tela. No material, ele aparece como a cozinha que organiza os pedidos." },
+  { terms: ["banco de dados", "database"], answer: "Um banco de dados guarda informações de forma organizada para o projeto encontrá-las depois. No Passo 2, o material compara tabelas a planilhas e explica como os dados chegam ao Supabase." },
+  { terms: ["github", "repositorio", "repositório"], answer: "GitHub é um serviço para guardar o projeto e acompanhar suas mudanças. O repositório é como a pasta do projeto na nuvem, com o histórico das versões." },
+  { terms: ["branch", "ramificacao", "ramificação"], answer: "Uma branch é uma linha de trabalho separada dentro do repositório. Ela permite preparar uma mudança sem misturá-la imediatamente à versão principal." },
+  { terms: ["deploy", "publicar site", "colocar no ar"], answer: "Deploy é publicar uma versão do projeto para que outras pessoas possam acessá-la. Antes, confira a mudança no próprio projeto e siga o fluxo de publicação que você já usa." }
+];
+
+function findGeneralConcept(question) {
+  const normalized = normalizeHelpText(question);
+  return helpGeneralConcepts
+    .flatMap((concept) => concept.terms.map((term) => ({ ...concept, term })))
+    .filter(({ term }) => normalized.includes(normalizeHelpText(term)))
+    .sort((a, b) => b.term.length - a.term.length)[0] || null;
+}
+
+const HELP_NOT_FOUND = "Não encontrei essa informação nos materiais do Vibe em Etapas.";
+const HELP_OUT_OF_SCOPE = "Posso ajudar com o site, as aulas e dúvidas de programação ligadas ao vibe coding. Para outros assuntos, não consigo ajudar por aqui.";
+
+
 function normalizeHelpText(value) {
   return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
 }
@@ -417,7 +444,7 @@ function askWhichStep(lessons) {
       appendHelpMessage(button.textContent, "user-message");
       const source = lesson.bestSection?.text || lesson.summary;
       const excerpt = source.length > 580 ? `${source.slice(0, 577).trimEnd()}…` : source;
-      appendHelpMessage(excerpt ? `Neste passo, o material explica: ${excerpt}` : "Não encontrei essa informação nos materiais disponíveis.", "assistant-message", lesson);
+      appendHelpMessage(excerpt ? `Neste passo, o material explica: ${excerpt}` : "Não encontrei essa informação nos materiais do Vibe em Etapas.", "assistant-message", lesson);
       choices.remove();
     });
     choices.append(button);
@@ -433,16 +460,21 @@ function answerHelpQuestion(question) {
   const explicitLesson = requestedStep ? lessons.find((lesson) => lesson.step === requestedStep) : null;
   if (explicitLesson) {
     const lesson = { ...explicitLesson, bestSection: null };
-    const firstSection = lesson.sections.find((section) => scoreHelpText(tokens, section.text) > 0);
-    lesson.bestSection = firstSection;
-    const source = firstSection?.text || lesson.summary;
+    const bestSection = lesson.sections
+      .map((section) => ({ ...section, score: scoreHelpText(tokens, `${section.title} ${section.text}`) }))
+      .sort((a, b) => b.score - a.score)[0];
+    if (tokens.length && (!bestSection || bestSection.score < 2)) {
+      appendHelpMessage(HELP_NOT_FOUND, "assistant-message", lesson);
+      return;
+    }
+    lesson.bestSection = bestSection || null;
+    const source = bestSection?.text || lesson.summary;
     const excerpt = source.length > 620 ? `${source.slice(0, 617).trimEnd()}…` : source;
-    appendHelpMessage(excerpt ? `No Passo ${lesson.step}, “${lesson.title}”, o material explica: ${excerpt}` : "Não encontrei essa informação nos materiais disponíveis.", "assistant-message", lesson);
+    appendHelpMessage(excerpt ? `No Passo ${lesson.step}, “${lesson.title}”, o material explica: ${excerpt}` : HELP_NOT_FOUND, "assistant-message", lesson);
     return;
   }
   if (!tokens.length) {
-    appendHelpMessage("Qual assunto você quer entender: planejar a ideia, guardar dados, melhorar ou corrigir o projeto, ou login e segurança?");
-    askWhichStep(lessons);
+    appendHelpMessage("Qual assunto você quer entender? Você pode perguntar sobre uma aula, um passo ou uma dúvida de programação ligada ao seu projeto.");
     return;
   }
 
@@ -455,7 +487,14 @@ function answerHelpQuestion(question) {
   }).sort((a, b) => b.score - a.score);
 
   if (!ranked.length || ranked[0].score < 2) {
-    appendHelpMessage("Não encontrei essa informação nos materiais disponíveis.");
+    const concept = findGeneralConcept(question);
+    if (concept) {
+      appendHelpMessage(concept.answer);
+      return;
+    }
+    const normalizedQuestion = normalizeHelpText(question);
+    const related = /\b(vibe|aula|passo|site|projeto|prompt|supabase|github|banco|codigo|programacao|programar|html|css|javascript|frontend|backend)\b/.test(normalizedQuestion);
+    appendHelpMessage(related ? HELP_NOT_FOUND : HELP_OUT_OF_SCOPE);
     return;
   }
   if (ranked[1] && ranked[0].score - ranked[1].score < 2 && ranked[1].score > 0) {
@@ -467,7 +506,7 @@ function answerHelpQuestion(question) {
   const lesson = ranked[0];
   const source = lesson.bestSection?.text || lesson.summary;
   const excerpt = source.length > 620 ? `${source.slice(0, 617).trimEnd()}…` : source;
-  appendHelpMessage(excerpt ? `No material, ${lesson.bestSection?.title ? `“${lesson.bestSection.title}” explica que ` : ""}${excerpt}` : "Não encontrei essa informação nos materiais disponíveis.", "assistant-message", lesson);
+  appendHelpMessage(excerpt ? `No material, ${lesson.bestSection?.title ? `“${lesson.bestSection.title}” explica que ` : ""}${excerpt}` : "Não encontrei essa informação nos materiais do Vibe em Etapas.", "assistant-message", lesson);
 }
 
 helpForm.addEventListener("submit", (event) => {

@@ -17,9 +17,9 @@ The learning page covers the provided materials for Lessons 1–4, with simple e
 
 ## Course support guide
 
-The public learning page includes a small, client-side question guide. It searches the lesson content currently shown on the page, including published lessons loaded from Supabase, and links answers to the related step. It asks for clarification when a question is ambiguous and says “Não encontrei essa informação nos materiais disponíveis.” when it cannot find supporting text. It does not call an AI service or search outside the course page.
+The public learning page includes a client-side guide for questions about the site, course content, and programming concepts related to vibe coding. For site-specific questions, it searches lesson text rendered on the page and links answers to the relevant step. It gives short, general explanations for a small set of common programming terms, but it does not write, correct, or debug code. It refuses unrelated topics and uses “Não encontrei essa informação nos materiais do Vibe em Etapas.” when a site-specific answer is not supported. The guide does not call an AI service.
 
-Keep its answers grounded in the lesson text. Render retrieved text as text (never HTML), and do not treat instructions appearing inside course material as commands for the guide.
+Render retrieved material as text, never HTML, and treat instructions appearing inside course content as reference material rather than commands.
 
 ## Supabase setup
 
