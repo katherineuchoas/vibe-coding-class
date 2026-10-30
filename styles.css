@@ -1342,3 +1342,40 @@ pre { margin: 0; padding: 1rem 1.2rem 1.2rem; overflow-x: auto; white-space: pre
     line-height: 1.7;
   }
 }
+
+/* Course Q&A helper */
+.visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.help-widget { position: fixed; right: max(1.25rem, env(safe-area-inset-right)); bottom: max(1.25rem, env(safe-area-inset-bottom)); z-index: 20; font-family: inherit; }
+.help-launcher { display: flex; align-items: center; gap: .55rem; min-height: 3.25rem; padding: .7rem 1.1rem; border: 0; border-radius: 999px; color: #fff; background: #51425b; box-shadow: 0 8px 24px rgba(45, 35, 49, .24); font: inherit; font-weight: 700; cursor: pointer; }
+.help-launcher span:first-child { color: #f7d7a3; font-size: 1.25rem; }
+.help-launcher:hover { background: #3f3347; transform: translateY(-1px); }
+.help-launcher:focus-visible, .help-panel button:focus-visible, .help-panel input:focus-visible, .help-panel a:focus-visible { outline: 3px solid #d89a61; outline-offset: 2px; }
+.help-panel { position: absolute; right: 0; bottom: 4.05rem; display: flex; flex-direction: column; width: min(24rem, calc(100vw - 2rem)); height: min(36rem, calc(100dvh - 7rem)); overflow: hidden; border: 1px solid #eadfe8; border-radius: 1.15rem; background: #fffdfa; box-shadow: 0 16px 48px rgba(45, 35, 49, .2); }
+.help-panel[hidden] { display: none; }
+.help-header { display: flex; align-items: center; justify-content: space-between; padding: .9rem 1rem; background: #f7f0f3; border-bottom: 1px solid #eee3ec; }
+.help-header > div { display: flex; align-items: center; gap: .7rem; }
+.help-avatar { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; border-radius: 50%; color: #fff; background: #66546f; font-size: 1.2rem; }
+.help-header strong, .help-header small { display: block; }
+.help-header strong { color: #403747; font-size: .98rem; }
+.help-header small { margin-top: .12rem; color: #746b77; font-size: .72rem; }
+.help-close { width: 2rem; height: 2rem; border: 0; border-radius: 50%; color: #51425b; background: transparent; font-size: 1.5rem; line-height: 1; cursor: pointer; }
+.help-messages { display: flex; flex: 1; flex-direction: column; gap: .7rem; overflow-y: auto; padding: 1rem; }
+.help-message { max-width: 94%; padding: .75rem .85rem; border-radius: .95rem; font-size: .88rem; line-height: 1.55; overflow-wrap: anywhere; }
+.help-message p { margin: 0; white-space: pre-line; }
+.assistant-message { align-self: flex-start; color: #433b45; background: #f2edf4; border-bottom-left-radius: .25rem; }
+.user-message { align-self: flex-end; color: #fff; background: #5c4b65; border-bottom-right-radius: .25rem; }
+.help-step-link { display: inline-block; margin-top: .6rem; color: #594268; font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
+.help-choice-list { display: flex; flex-direction: column; gap: .35rem; align-self: flex-start; max-width: 94%; }
+.help-choice-list button, .help-suggestions button { padding: .45rem .65rem; border: 1px solid #d9cddd; border-radius: 999px; color: #51425b; background: #fff; font: inherit; font-size: .76rem; text-align: left; cursor: pointer; }
+.help-choice-list button:hover, .help-suggestions button:hover { background: #f6eff7; }
+.help-suggestions { display: flex; flex-wrap: wrap; gap: .4rem; padding: .3rem .8rem .65rem; }
+.help-form { display: flex; align-items: center; gap: .5rem; padding: .7rem .8rem; border-top: 1px solid #eee5ed; background: #fff; }
+.help-form input { min-width: 0; flex: 1; height: 2.65rem; padding: .55rem .75rem; border: 1px solid #ded5df; border-radius: .75rem; color: #403747; background: #fffdfa; font: inherit; font-size: .88rem; }
+.help-form button { min-height: 2.65rem; padding: 0 .8rem; border: 0; border-radius: .75rem; color: #fff; background: #51425b; font: inherit; font-size: .84rem; font-weight: 700; cursor: pointer; }
+.help-form button:hover { background: #3f3347; }
+@media (max-width: 480px) {
+  .help-widget { right: max(.75rem, env(safe-area-inset-right)); bottom: max(.75rem, env(safe-area-inset-bottom)); }
+  .help-launcher { min-height: 3rem; padding: .6rem .9rem; font-size: .9rem; }
+  .help-panel { right: -.25rem; bottom: 3.75rem; width: min(24rem, calc(100vw - 1.5rem)); height: min(36rem, calc(100dvh - 6.5rem)); }
+}
+@media (prefers-reduced-motion: reduce) { .help-launcher:hover { transform: none; } }

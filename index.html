@@ -7,10 +7,10 @@
   <meta name="description" content="Aprenda vibe coding com passos simples, exercícios guiados e prompts prontos.">
   <title>Vibe em Etapas — aprenda criando</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="styles.css?v=20261023-responsive-width">
+  <link rel="stylesheet" href="styles.css?v=20261029-course-guide">
   <script src="supabase-config.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.118.0"></script>
-  <script src="app.js?v=20261023-supabase-client" defer></script>
+  <script src="app.js?v=20261029-course-guide" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -247,6 +247,30 @@ Quando terminar, diga como posso testar cada caminho.</pre>
     <a href="admin.html">Área de edição</a>
     <a href="#inicio">Voltar ao topo</a>
   </footer>
+  <section class="help-widget" aria-label="Assistente de dúvidas">
+    <button class="help-launcher" id="help-launcher" type="button" aria-expanded="false" aria-controls="help-panel">
+      <span aria-hidden="true">✦</span><span>Tire suas dúvidas</span>
+    </button>
+    <div class="help-panel" id="help-panel" hidden>
+      <header class="help-header">
+        <div><span class="help-avatar" aria-hidden="true">✳</span><div><strong>Guia de etapas</strong><small>Respostas baseadas neste material</small></div></div>
+        <button class="help-close" id="help-close" type="button" aria-label="Fechar assistente">×</button>
+      </header>
+      <div class="help-messages" id="help-messages" aria-live="polite" aria-relevant="additions text">
+        <div class="help-message assistant-message"><p>Oi! Posso explicar um conceito ou ajudar você a encontrar o passo certo. O que está com dúvida?</p></div>
+      </div>
+      <div class="help-suggestions" id="help-suggestions">
+        <button type="button">O que é um prompt?</button>
+        <button type="button">Como salvo os dados?</button>
+        <button type="button">Encontrei um erro</button>
+      </div>
+      <form class="help-form" id="help-form">
+        <label class="visually-hidden" for="help-input">Escreva sua dúvida</label>
+        <input id="help-input" name="question" type="text" maxlength="500" placeholder="Escreva sua dúvida…" autocomplete="off" required>
+        <button type="submit" aria-label="Enviar dúvida">Enviar <span aria-hidden="true">↑</span></button>
+      </form>
+    </div>
+  </section>
   <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden>
     <span class="toast-icon" aria-hidden="true"></span>
     <span class="toast-text"></span>
