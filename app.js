@@ -319,6 +319,187 @@ async function copyText(text) {
   if (!copied) throw new Error("Não foi possível copiar.");
 }
 
+// The guide only searches lesson content rendered on this page. Source text is
+// displayed as text, never interpreted as instructions or executable markup.
+const helpPanel = document.querySelector("#help-panel");
+const helpLauncher = document.querySelector("#help-launcher");
+const helpMessages = document.querySelector("#help-messages");
+const helpForm = document.querySelector("#help-form");
+const helpInput = document.querySelector("#help-input");
+const helpStopWords = new Set("a ao aos as o os um uma umas uns de da das do dos e ou para por com sem em no nos na nas que qual quais como onde quando porque porquê é são foi ser ter tem isso esta esse essa este minha meu seu sua sobre me minha eu voce você está estou fica fazer faz devo posso gostaria quero explica explique entender saber ajuda dúvida duvida passo passos aula aulas site material materiais".split(" "));
+const helpAliases = {
+  prompt: ["pedido", "instrução", "instrucoes", "comando", "mensagem"],
+  frontend: ["tela", "interface", "visual", "pagina", "página"],
+  prototipo: ["primeira versao", "teste da ideia"],
+  mvp: ["versao minima", "menor versao"],
+  repositorio: ["github", "historico", "pasta do projeto"],
+  backend: ["por tras", "cozinha", "servidor"],
+  supabase: ["banco", "database", "dados"],
+  tabela: ["coluna", "linha", "planilha"],
+  localstorage: ["memoria do navegador", "navegador", "aparelho"],
+  migration: ["migracao", "mudancas no banco"],
+  mcp: ["conector", "conexao da ia"],
+  autenticacao: ["login", "entrar", "conta"],
+  permissao: ["autorizacao", "acesso", "rls", "seguranca"],
+  sessao: ["logado", "lembra que entrou"],
+  rota: ["endereco", "url", "pagina"],
+  console: ["f12", "erro vermelho", "mensagem de erro"],
+  network: ["rede", "pedido", "resposta", "status"],
+  bug: ["erro", "quebrou", "parou de funcionar", "problema"]
+};
+
+function normalizeHelpText(value) {
+  return value.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+}
+
+function tokenizeHelpQuestion(value) {
+  return [...new Set(normalizeHelpText(value).match(/[a-z0-9]+/g) || [])]
+    .filter((token) => token.length > 2 && !helpStopWords.has(token));
+}
+
+function getHelpLessons() {
+  return [...document.querySelectorAll(".learning article.lesson")].map((article, index) => {
+    const summary = article.querySelector("summary");
+    const step = Number(summary?.querySelector(".lesson-tag")?.textContent.match(/\d+/)?.[0]) || index + 1;
+    const title = summary?.querySelector(".summary-title")?.textContent.trim() || `Passo ${step}`;
+    const sections = [...article.querySelectorAll(".lesson-body p, .lesson-body li, .lesson-body .lesson-step-content, .lesson-body pre")]
+      .map((element) => ({
+        title: element.closest(".info-card, .exercise-box, .callout, .track-card")?.querySelector("h3, strong")?.textContent.trim() || "",
+        text: element.innerText.trim()
+      }))
+      .filter((section) => section.text.length > 20);
+    return { article, step, title, summary: article.querySelector(".plain-intro")?.textContent.trim() || "", sections };
+  });
+}
+
+function scoreHelpText(tokens, value) {
+  const normalized = normalizeHelpText(value);
+  let score = 0;
+  tokens.forEach((token) => {
+    if (normalized.includes(token)) score += token.length > 6 ? 3 : 2;
+    if ((helpAliases[token] || []).some((alias) => normalized.includes(normalizeHelpText(alias)))) score += 2;
+  });
+  return score;
+}
+
+function appendHelpMessage(text, type = "assistant-message", lesson = null) {
+  const message = document.createElement("div");
+  message.className = `help-message ${type}`;
+  const paragraph = document.createElement("p");
+  paragraph.textContent = text;
+  message.append(paragraph);
+
+  if (lesson?.article?.id) {
+    const link = document.createElement("a");
+    link.className = "help-step-link";
+    link.href = `#${lesson.article.id}`;
+    link.textContent = `Ver o Passo ${lesson.step}: ${lesson.title} →`;
+    link.addEventListener("click", () => {
+      const details = lesson.article.querySelector("details");
+      if (details) details.open = true;
+    });
+    message.append(link);
+  }
+
+  helpMessages.append(message);
+  helpMessages.scrollTop = helpMessages.scrollHeight;
+}
+
+function askWhichStep(lessons) {
+  if (!lessons.length) return;
+  const choices = document.createElement("div");
+  choices.className = "help-choice-list";
+  lessons.forEach((lesson) => {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.textContent = `Passo ${lesson.step}: ${lesson.title}`;
+    button.addEventListener("click", () => {
+      appendHelpMessage(button.textContent, "user-message");
+      const source = lesson.bestSection?.text || lesson.summary;
+      const excerpt = source.length > 580 ? `${source.slice(0, 577).trimEnd()}…` : source;
+      appendHelpMessage(excerpt ? `Neste passo, o material explica: ${excerpt}` : "Não encontrei essa informação nos materiais disponíveis.", "assistant-message", lesson);
+      choices.remove();
+    });
+    choices.append(button);
+  });
+  helpMessages.append(choices);
+  helpMessages.scrollTop = helpMessages.scrollHeight;
+}
+
+function answerHelpQuestion(question) {
+  const tokens = tokenizeHelpQuestion(question);
+  const lessons = getHelpLessons();
+  const requestedStep = Number(normalizeHelpText(question).match(/\b(?:passo|aula|fase)\s*(\d+)\b/)?.[1]);
+  const explicitLesson = requestedStep ? lessons.find((lesson) => lesson.step === requestedStep) : null;
+  if (explicitLesson) {
+    const lesson = { ...explicitLesson, bestSection: null };
+    const firstSection = lesson.sections.find((section) => scoreHelpText(tokens, section.text) > 0);
+    lesson.bestSection = firstSection;
+    const source = firstSection?.text || lesson.summary;
+    const excerpt = source.length > 620 ? `${source.slice(0, 617).trimEnd()}…` : source;
+    appendHelpMessage(excerpt ? `No Passo ${lesson.step}, “${lesson.title}”, o material explica: ${excerpt}` : "Não encontrei essa informação nos materiais disponíveis.", "assistant-message", lesson);
+    return;
+  }
+  if (!tokens.length) {
+    appendHelpMessage("Qual assunto você quer entender: planejar a ideia, guardar dados, melhorar ou corrigir o projeto, ou login e segurança?");
+    askWhichStep(lessons);
+    return;
+  }
+
+  const ranked = lessons.map((lesson) => {
+    const bestSection = lesson.sections
+      .map((section) => ({ ...section, score: scoreHelpText(tokens, `${section.title} ${section.text}`) }))
+      .sort((a, b) => b.score - a.score)[0];
+    const titleScore = scoreHelpText(tokens, `${lesson.title} ${lesson.summary}`) * 2;
+    return { ...lesson, bestSection, score: Math.max(titleScore, bestSection?.score || 0) };
+  }).sort((a, b) => b.score - a.score);
+
+  if (!ranked.length || ranked[0].score < 2) {
+    appendHelpMessage("Não encontrei essa informação nos materiais disponíveis.");
+    return;
+  }
+  if (ranked[1] && ranked[0].score - ranked[1].score < 2 && ranked[1].score > 0) {
+    appendHelpMessage("Encontrei mais de um passo que pode ajudar. Qual deles se aproxima da sua dúvida?");
+    askWhichStep(ranked.slice(0, 3));
+    return;
+  }
+
+  const lesson = ranked[0];
+  const source = lesson.bestSection?.text || lesson.summary;
+  const excerpt = source.length > 620 ? `${source.slice(0, 617).trimEnd()}…` : source;
+  appendHelpMessage(excerpt ? `No material, ${lesson.bestSection?.title ? `“${lesson.bestSection.title}” explica que ` : ""}${excerpt}` : "Não encontrei essa informação nos materiais disponíveis.", "assistant-message", lesson);
+}
+
+helpForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const question = helpInput.value.trim();
+  if (!question) return;
+  appendHelpMessage(question, "user-message");
+  helpInput.value = "";
+  answerHelpQuestion(question);
+  helpInput.focus();
+});
+
+document.querySelectorAll("#help-suggestions button").forEach((button) => {
+  button.addEventListener("click", () => {
+    helpInput.value = button.textContent;
+    helpForm.requestSubmit();
+  });
+});
+
+function setHelpPanelOpen(open) {
+  helpPanel.hidden = !open;
+  helpLauncher.setAttribute("aria-expanded", String(open));
+  if (open) helpInput.focus();
+  else helpLauncher.focus();
+}
+
+helpLauncher.addEventListener("click", () => setHelpPanelOpen(helpPanel.hidden));
+document.querySelector("#help-close").addEventListener("click", () => setHelpPanelOpen(false));
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && !helpPanel.hidden) setHelpPanelOpen(false);
+});
+
 document.querySelectorAll("[data-copy]").forEach((button) => {
   button.addEventListener("click", async () => {
     const prompt = document.getElementById(button.dataset.copy);

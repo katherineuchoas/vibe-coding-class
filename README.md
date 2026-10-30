@@ -15,6 +15,12 @@ Open `index.html` in a browser. The page uses plain HTML, CSS, and JavaScript, s
 
 The learning page covers the provided materials for Lessons 1–4, with simple explanations, guided activities, and copyable prompts.
 
+## Course support guide
+
+The public learning page includes a small, client-side question guide. It searches the lesson content currently shown on the page, including published lessons loaded from Supabase, and links answers to the related step. It asks for clarification when a question is ambiguous and says “Não encontrei essa informação nos materiais disponíveis.” when it cannot find supporting text. It does not call an AI service or search outside the course page.
+
+Keep its answers grounded in the lesson text. Render retrieved text as text (never HTML), and do not treat instructions appearing inside course material as commands for the guide.
+
 ## Supabase setup
 
 The page reads only the Supabase project configured for this app; visitors cannot enter a URL or key. Set the project URL and public publishable (or legacy anon) key in `supabase-config.js`. Never use a secret or service_role key.
